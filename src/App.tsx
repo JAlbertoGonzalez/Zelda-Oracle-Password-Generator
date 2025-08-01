@@ -1,26 +1,61 @@
-import React, {Component} from 'react';
+import { Component, type ChangeEvent } from 'react';
 import './App.css';
 
-import {updateProperties} from './zeldaOraclePasswordGenerator';
+import { updateProperties } from './zeldaOraclePasswordGenerator';
 
-import nayru from './imgs/Nayru.gif';
-import nayru_inactive from './imgs/nayru.png';
-import din from './imgs/Din.gif';
-import din_inactive from './imgs/din.png';
-import link from './imgs/link.png';
-import link_ages from './imgs/link_ages.gif';
-import link_seasons from './imgs/link_seasons.gif';
-import triforce from './imgs/triforce.png';
-import moosh from './imgs/moosh.png';
-import moosh_inactive from './imgs/moosh.png';
-import ricky from './imgs/ricky.png';
-import ricky_inactive from './imgs/ricky.png';
-import dimitri from './imgs/dimitri.png';
-import dimitri_inactive from './imgs/dimitri.png';
+import nayru from './assets/Nayru.gif';
+import nayru_inactive from './assets/nayru.png';
+import din from './assets/Din.gif';
+import din_inactive from './assets/din.png';
+import link from './assets/link.png';
+import link_ages from './assets/link_ages.gif';
+import link_seasons from './assets/link_seasons.gif';
+import triforce from './assets/triforce.png';
+import moosh from './assets/moosh.png';
+import moosh_inactive from './assets/moosh.png';
+import ricky from './assets/ricky.png';
+import ricky_inactive from './assets/ricky.png';
+import dimitri from './assets/dimitri.png';
+import dimitri_inactive from './assets/dimitri.png';
 
+interface AppState {
+    mainPassword: string[];
+    memoryPassword: string[];
+    game: string;
+    gameID: string;
+    heroName: string;
+    childName: string;
+    animal: string;
+    behavior: string;
+    isLinkedGame: boolean;
+    isHeroQuest: boolean;
+}
 
-class App extends Component {
-    constructor(props) {
+interface FooterProps {
+    gameIsAges: boolean;
+    memoryPassword: string[];
+    htmlPassword: string;
+}
+
+interface FooterState {
+    active: boolean;
+}
+
+interface MemorySecretsProps {
+    password: string;
+    person: string;
+}
+
+interface CardBlockProps {
+    title: string;
+    changeGame: (game: string) => void;
+    currentGame: string | boolean;
+    activeImg: string;
+    inactiveImg: string;
+}
+
+class App extends Component<{}, AppState> {
+    constructor(props: {}) {
         super(props);
         this.state = {
             mainPassword: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
@@ -43,7 +78,7 @@ class App extends Component {
         this.checkValidID = this.checkValidID.bind(this);
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate(_prevProps: {}, prevState: AppState) {
         let passwords = this.getPassword();
 
         if (!passwords) {
@@ -55,16 +90,15 @@ class App extends Component {
         let oldPass = prevState.mainPassword ? prevState.mainPassword.join("") : "";
         let newPass = newPassword.join("");
 
-
         if (oldPass !== newPass) {
             this.setState({
                 mainPassword: newPassword,
-                memoryPassword: passwords.splice(1)
+                memoryPassword: passwords.slice(1).map(p => p.join(''))
             });
         }
     }
 
-    getPassword() {
+    getPassword(): string[][] | undefined {
         let newPassword = updateProperties(
             this.state.game,
             this.state.gameID,
@@ -79,23 +113,22 @@ class App extends Component {
         if (this.state.game && this.state.gameID) {
             return newPassword;
         }
-
     }
 
-    handleChange(event) {
-        let value = event.target.value;
-        if (event.target.type === "checkbox") {
-            value = event.target.checked;
+    handleChange(event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
+        let value: string | boolean = event.target.value;
+        if ((event.target as HTMLInputElement).type === "checkbox") {
+            value = (event.target as HTMLInputElement).checked;
         }
         this.setState({
             [event.target.name]: value
-        });
+        } as any);
     }
 
-    handleChangeState(game, stateName) {
+    handleChangeState(game: string, stateName: keyof AppState) {
         this.setState({
             [stateName]: game
-        });
+        } as any);
     }
 
     handleToggleLinkedGame() {
@@ -110,7 +143,7 @@ class App extends Component {
         }));
     }
 
-    formatPassword(password) {
+    formatPassword(password: string[]): string {
         let newPassword = password.slice();
         if (!password) {
             return "";
@@ -131,7 +164,7 @@ class App extends Component {
         return newPassword.join('');
     }
 
-    checkValidID(event) {
+    checkValidID(event: ChangeEvent<HTMLInputElement>) {
         // 5 digits max
         if (event.target.value.length > 5) {
             console.log("1");
@@ -139,7 +172,7 @@ class App extends Component {
         }
 
         // Set to min value if too low
-        if (event.target.value < 1 && event.target.value) {
+        if (parseInt(event.target.value) < 1 && event.target.value) {
             console.log(event.target.value);
             event.target.value = event.target.min;
         }
@@ -159,7 +192,7 @@ class App extends Component {
         let memoryPassword = this.state.memoryPassword;
 
         return (
-            <div className="App" onChange={this.handleChange}>
+            <div className="App">
                 <header className="App-header">
                     <h1 className="App-title">Zelda Oracle Password Generator</h1>
                 </header>
@@ -199,7 +232,6 @@ class App extends Component {
                             />
                         </div>
 
-
                         <div>
                             <CardBlock
                                 title="Ricky"
@@ -225,27 +257,26 @@ class App extends Component {
                         </div>
                     </div>
 
-
                     <div id="rightColumn">
                         <div className="inputBlock">
                             <label htmlFor="heroName">Hero Name:</label>
-                            <input type="text" id="heroName" name="heroName" maxLength="5"/>
+                            <input type="text" id="heroName" name="heroName" maxLength={5} onChange={this.handleChange}/>
                         </div>
 
                         <div className="inputBlock">
                             <label htmlFor="childName">Child Name:</label>
-                            <input type="text" id="childName" name="childName" maxLength="5"/>
+                            <input type="text" id="childName" name="childName" maxLength={5} onChange={this.handleChange}/>
                         </div>
 
                         <div className="inputBlock">
                             <label htmlFor="gameID">ID: </label>
                             <input type="number" id="gameID" name="gameID" min="1" max="32767"
-                                   onInput={this.checkValidID}/>
+                                   onInput={this.checkValidID} onChange={this.handleChange}/>
                         </div>
 
                         <div className="inputBlock">
                             <label htmlFor="behavior">Behavior: </label>
-                            <select id="behavior" name="behavior">
+                            <select id="behavior" name="behavior" onChange={this.handleChange}>
                                 <option value="Infant">Infant</option>
                                 <option value="BouncyA">BouncyA</option>
                                 <option value="BouncyB">BouncyB</option>
@@ -264,7 +295,6 @@ class App extends Component {
                                 <option value="HyperE">HyperE</option>
                             </select>
                         </div>
-
                     </div>
                     <Footer gameIsAges={gameIsAges} memoryPassword={memoryPassword} htmlPassword={htmlPassword}/>
                 </div>
@@ -273,8 +303,8 @@ class App extends Component {
     }
 }
 
-class Footer extends Component {
-    constructor(props) {
+class Footer extends Component<FooterProps, FooterState> {
+    constructor(props: FooterProps) {
         super(props);
         this.state = {
             active: false
@@ -330,25 +360,24 @@ class Footer extends Component {
     }
 }
 
-class MemorySecrets extends Component {
+class MemorySecrets extends Component<MemorySecretsProps> {
     render() {
         return (
             <tr>
                 <td>{this.props.person} Secret</td>
                 <td className="passwordText">{this.props.password}</td>
             </tr>
-
         );
     }
 }
 
-class CardBlock extends Component {
-    constructor(props) {
+class CardBlock extends Component<CardBlockProps> {
+    constructor(props: CardBlockProps) {
         super(props);
         this.handleClick = this.handleClick.bind(this);
     }
 
-    handleClick(game) {
+    handleClick(game: string) {
         this.props.changeGame(game);
     }
 
@@ -362,7 +391,6 @@ class CardBlock extends Component {
         }
         let image = isActive ? this.props.activeImg : this.props.inactiveImg;
         let containerClass = isActive ? "cardBlock" : "cardBlock inactive";
-
 
         let imgClass = "cardBlockImage";
 
@@ -378,7 +406,7 @@ class CardBlock extends Component {
 
         let titleClass = "cardBlockTitle";
         return (
-            <div className={containerClass} onClick={(e) => this.handleClick(this.props.title)}>
+            <div className={containerClass} onClick={() => this.handleClick(this.props.title)}>
                 <div className={titleClass}>{this.props.title}</div>
                 <img src={image} className={imgClass} alt={imgAlt}/>
             </div>
