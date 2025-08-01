@@ -8,14 +8,22 @@ import {
     TextInput, 
     NumberInput, 
     Select, 
-    Card, 
     Image, 
     Text,
     Box,
     Collapse,
     Button,
-    Table
+    Table,
+    SegmentedControl,
+    ThemeIcon
 } from '@mantine/core';
+import { 
+    IconUser, 
+    IconUsers, 
+    IconId, 
+    IconMoodKid
+} from '@tabler/icons-react';
+import ReactCountryFlag from "react-country-flag";
 import './App.css';
 
 import { updateProperties } from './zeldaOraclePasswordGenerator';
@@ -46,6 +54,7 @@ interface AppState {
     behavior: string;
     isLinkedGame: boolean;
     isHeroQuest: boolean;
+    gameLanguage: string;
 }
 
 interface FooterProps {
@@ -63,12 +72,388 @@ interface MemorySecretsProps {
     person: string;
 }
 
-interface CardBlockProps {
-    title: string;
-    changeGame: (game: string) => void;
-    currentGame: string | boolean;
-    activeImg: string;
-    inactiveImg: string;
+interface GameSettingsProps {
+    state: AppState;
+    handleChange: (event: any) => void;
+    gameIsAges: boolean;
+}
+
+class GameSettings extends Component<GameSettingsProps> {
+    render() {
+        const { state, handleChange, gameIsAges } = this.props;
+        
+        return (
+            <Paper>
+                <Title order={3}>Game Settings</Title>
+                
+                <Box style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'auto 1fr auto',
+                    gap: '12px',
+                    alignItems: 'center'
+                }}>
+                    {/* Game Language Row */}
+                    <Text size="sm" fw={500}>Game Language</Text>
+                    <SegmentedControl
+                        value={state.gameLanguage}
+                        onChange={(value) => handleChange({
+                            target: { name: 'gameLanguage', value: value }
+                        } as any)}
+                        data={[
+                            { label: 'EUR/US', value: 'EUR/US' },
+                            { label: 'JP', value: 'JP' }
+                        ]}
+                        size="sm"
+                        fullWidth
+                    />
+                    <Group gap="xs" justify="center" wrap="nowrap">
+                        <Box style={{ 
+                            width: '32px',
+                            height: '32px',
+                            borderRadius: '4px',
+                            overflow: 'hidden',
+                            border: state.gameLanguage === 'EUR/US' ? '2px solid #228be6' : '2px solid #e9ecef',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            opacity: state.gameLanguage === 'EUR/US' ? 1 : 0.4,
+                            filter: state.gameLanguage === 'EUR/US' ? 'none' : 'grayscale(100%)',
+                            flexShrink: 0
+                        }}>
+                            <ReactCountryFlag 
+                                countryCode="EU" 
+                                svg 
+                                style={{ 
+                                    width: '24px',
+                                    height: '24px',
+                                    objectFit: 'cover'
+                                }} 
+                            />
+                        </Box>
+                        <Box style={{ 
+                            width: '32px',
+                            height: '32px',
+                            borderRadius: '4px',
+                            overflow: 'hidden',
+                            border: state.gameLanguage === 'JP' ? '2px solid #228be6' : '2px solid #e9ecef',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            opacity: state.gameLanguage === 'JP' ? 1 : 0.4,
+                            filter: state.gameLanguage === 'JP' ? 'none' : 'grayscale(100%)',
+                            flexShrink: 0
+                        }}>
+                            <ReactCountryFlag 
+                                countryCode="JP" 
+                                svg 
+                                style={{ 
+                                    width: '24px',
+                                    height: '24px',
+                                    objectFit: 'cover'
+                                }} 
+                            />
+                        </Box>
+                    </Group>
+
+                    {/* Game Title Row */}
+                    <Text size="sm" fw={500}>Oracle of...</Text>
+                    <SegmentedControl
+                        value={state.game}
+                        onChange={(value) => handleChange({
+                            target: { name: 'game', value: value }
+                        } as any)}
+                        data={[
+                            { label: 'Ages', value: 'Ages' },
+                            { label: 'Seasons', value: 'Seasons' }
+                        ]}
+                        size="sm"
+                        fullWidth
+                    />
+                    <Group gap="xs" justify="center" wrap="nowrap">
+                        <Box style={{ 
+                            width: '32px',
+                            height: '32px',
+                            borderRadius: '6px',
+                            overflow: 'hidden',
+                            border: state.game === 'Ages' ? '2px solid #228be6' : '2px solid #e9ecef',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            opacity: state.game === 'Ages' ? 1 : 0.4,
+                            filter: state.game === 'Ages' ? 'none' : 'grayscale(100%)',
+                            backgroundColor: '#f8f9fa',
+                            flexShrink: 0
+                        }}>
+                            <Image
+                                src={state.game === 'Ages' ? nayru : nayru_inactive}
+                                style={{ 
+                                    width: '24px',
+                                    height: '24px',
+                                    objectFit: 'contain'
+                                }} 
+                            />
+                        </Box>
+                        <Box style={{ 
+                            width: '32px',
+                            height: '32px',
+                            borderRadius: '6px',
+                            overflow: 'hidden',
+                            border: state.game === 'Seasons' ? '2px solid #228be6' : '2px solid #e9ecef',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            opacity: state.game === 'Seasons' ? 1 : 0.4,
+                            filter: state.game === 'Seasons' ? 'none' : 'grayscale(100%)',
+                            backgroundColor: '#f8f9fa',
+                            flexShrink: 0
+                        }}>
+                            <Image
+                                src={state.game === 'Seasons' ? din : din_inactive}
+                                style={{ 
+                                    width: '24px',
+                                    height: '24px',
+                                    objectFit: 'contain'
+                                }} 
+                            />
+                        </Box>
+                    </Group>
+
+                    {/* Game Type Row */}
+                    <Text size="sm" fw={500}>Game Type</Text>
+                    <Group gap="xs">
+                        <Button
+                            variant={state.isLinkedGame ? 'filled' : 'outline'}
+                            size="sm"
+                            onClick={() => handleChange({
+                                target: { name: 'isLinkedGame', value: !state.isLinkedGame }
+                            } as any)}
+                            style={{ flex: 1 }}
+                        >
+                            Linked Game
+                        </Button>
+                        <Button
+                            variant={state.isHeroQuest ? 'filled' : 'outline'}
+                            size="sm"
+                            onClick={() => handleChange({
+                                target: { name: 'isHeroQuest', value: !state.isHeroQuest }
+                            } as any)}
+                            style={{ flex: 1 }}
+                        >
+                            Hero's Quest
+                        </Button>
+                    </Group>
+                    <Group gap="xs" justify="center" wrap="nowrap">
+                        <Box style={{ 
+                            width: '32px',
+                            height: '32px',
+                            borderRadius: '6px',
+                            overflow: 'hidden',
+                            border: state.isLinkedGame ? '2px solid #228be6' : '2px solid #e9ecef',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            opacity: state.isLinkedGame ? 1 : 0.4,
+                            filter: state.isLinkedGame ? 'none' : 'grayscale(100%)',
+                            backgroundColor: '#f8f9fa',
+                            flexShrink: 0
+                        }}>
+                            <Image
+                                src={state.isLinkedGame ? (gameIsAges ? link_ages : link_seasons) : link}
+                                style={{ 
+                                    width: '24px',
+                                    height: '24px',
+                                    objectFit: 'contain'
+                                }} 
+                            />
+                        </Box>
+                        <Box style={{ 
+                            width: '32px',
+                            height: '32px',
+                            borderRadius: '6px',
+                            overflow: 'hidden',
+                            border: state.isHeroQuest ? '2px solid #228be6' : '2px solid #e9ecef',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            opacity: state.isHeroQuest ? 1 : 0.4,
+                            filter: state.isHeroQuest ? 'none' : 'grayscale(100%)',
+                            backgroundColor: '#f8f9fa',
+                            flexShrink: 0
+                        }}>
+                            <Image
+                                src={triforce}
+                                style={{ 
+                                    width: '24px',
+                                    height: '24px',
+                                    objectFit: 'contain'
+                                }} 
+                            />
+                        </Box>
+                    </Group>
+
+                    {/* Hero Name Row */}
+                    <Text size="sm" fw={500}>Hero Name</Text>
+                    <TextInput
+                        placeholder="Enter hero name"
+                        maxLength={5}
+                        value={state.heroName}
+                        onChange={(event) => handleChange({
+                            target: { name: 'heroName', value: event.currentTarget.value }
+                        } as any)}
+                    />
+                    <ThemeIcon size={32} variant="light" color="green">
+                        <IconUser size={24} />
+                    </ThemeIcon>
+
+                    {/* Child Name Row */}
+                    <Text size="sm" fw={500}>Child Name</Text>
+                    <TextInput
+                        placeholder="Enter child name"
+                        maxLength={5}
+                        value={state.childName}
+                        onChange={(event) => handleChange({
+                            target: { name: 'childName', value: event.currentTarget.value }
+                        } as any)}
+                    />
+                    <ThemeIcon size={32} variant="light" color="pink">
+                        <IconUsers size={24} />
+                    </ThemeIcon>
+
+                    {/* Game ID Row */}
+                    <Text size="sm" fw={500}>Game ID</Text>
+                    <NumberInput
+                        placeholder="Enter game ID"
+                        min={1}
+                        max={32767}
+                        value={parseInt(state.gameID) || undefined}
+                        onChange={(value) => handleChange({
+                            target: { name: 'gameID', value: value?.toString() || '' }
+                        } as any)}
+                    />
+                    <ThemeIcon size={32} variant="light" color="yellow">
+                        <IconId size={24} />
+                    </ThemeIcon>
+
+                    {/* Behavior Row */}
+                    <Text size="sm" fw={500}>Behavior</Text>
+                    <Select
+                        value={state.behavior}
+                        onChange={(value) => handleChange({
+                            target: { name: 'behavior', value: value || 'Infant' }
+                        } as any)}
+                        data={[
+                            { value: 'Infant', label: 'Infant' },
+                            { value: 'BouncyA', label: 'BouncyA' },
+                            { value: 'BouncyB', label: 'BouncyB' },
+                            { value: 'BouncyC', label:'BouncyC' },
+                            { value: 'BouncyD', label: 'BouncyD' },
+                            { value: 'BouncyE', label: 'BouncyE' },
+                            { value: 'ShyA', label: 'ShyA' },
+                            { value: 'ShyB', label: 'ShyB' },
+                            { value: 'ShyC', label: 'ShyC' },
+                            { value: 'ShyD', label: 'ShyD' },
+                            { value: 'ShyE', label: 'ShyE' },
+                            { value: 'HyperA', label: 'HyperA' },
+                            { value: 'HyperB', label: 'HyperB' },
+                            { value: 'HyperC', label: 'HyperC' },
+                            { value: 'HyperD', label: 'HyperD' },
+                            { value: 'HyperE', label: 'HyperE' },
+                        ]}
+                    />
+                    <ThemeIcon size={32} variant="light" color="orange">
+                        <IconMoodKid size={24} />
+                    </ThemeIcon>
+
+                    {/* Animal Friend Row */}
+                    <Text size="sm" fw={500}>Animal Friend</Text>
+                    <SegmentedControl
+                        value={state.animal}
+                        onChange={(value) => handleChange({
+                            target: { name: 'animal', value: value }
+                        } as any)}
+                        data={[
+                            { label: 'Ricky', value: 'Ricky' },
+                            { label: 'Dimitri', value: 'Dimitri' },
+                            { label: 'Moosh', value: 'Moosh' }
+                        ]}
+                        size="sm"
+                        fullWidth
+                    />
+                    <Group gap="xs" justify="center" wrap="nowrap">
+                        <Box style={{ 
+                            width: '32px',
+                            height: '32px',
+                            borderRadius: '6px',
+                            overflow: 'hidden',
+                            border: state.animal === 'Ricky' ? '2px solid #228be6' : '2px solid #e9ecef',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            opacity: state.animal === 'Ricky' ? 1 : 0.4,
+                            filter: state.animal === 'Ricky' ? 'none' : 'grayscale(100%)',
+                            backgroundColor: '#f8f9fa',
+                            flexShrink: 0
+                        }}>
+                            <Image
+                                src={state.animal === 'Ricky' ? ricky : ricky_inactive}
+                                style={{ 
+                                    width: '24px',
+                                    height: '24px',
+                                    objectFit: 'contain'
+                                }} 
+                            />
+                        </Box>
+                        <Box style={{ 
+                            width: '32px',
+                            height: '32px',
+                            borderRadius: '6px',
+                            overflow: 'hidden',
+                            border: state.animal === 'Dimitri' ? '2px solid #228be6' : '2px solid #e9ecef',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            opacity: state.animal === 'Dimitri' ? 1 : 0.4,
+                            filter: state.animal === 'Dimitri' ? 'none' : 'grayscale(100%)',
+                            backgroundColor: '#f8f9fa',
+                            flexShrink: 0
+                        }}>
+                            <Image
+                                src={state.animal === 'Dimitri' ? dimitri : dimitri_inactive}
+                                style={{ 
+                                    width: '24px',
+                                    height: '24px',
+                                    objectFit: 'contain'
+                                }} 
+                            />
+                        </Box>
+                        <Box style={{ 
+                            width: '32px',
+                            height: '32px',
+                            borderRadius: '6px',
+                            overflow: 'hidden',
+                            border: state.animal === 'Moosh' ? '2px solid #228be6' : '2px solid #e9ecef',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            opacity: state.animal === 'Moosh' ? 1 : 0.4,
+                            filter: state.animal === 'Moosh' ? 'none' : 'grayscale(100%)',
+                            backgroundColor: '#f8f9fa',
+                            flexShrink: 0
+                        }}>
+                            <Image
+                                src={state.animal === 'Moosh' ? moosh : moosh_inactive}
+                                style={{ 
+                                    width: '24px',
+                                    height: '24px',
+                                    objectFit: 'contain'
+                                }} 
+                            />
+                        </Box>
+                    </Group>
+                </Box>
+            </Paper>
+        );
+    }
 }
 
 class App extends Component<{}, AppState> {
@@ -77,14 +462,15 @@ class App extends Component<{}, AppState> {
         this.state = {
             mainPassword: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
             memoryPassword: ["", "", "", "", "", "", "", "", "", ""],
-            game: "",
+            game: "Ages",
             gameID: "",
             heroName: "",
             childName: "",
             animal: "Ricky",
             behavior: "Infant",
             isLinkedGame: false,
-            isHeroQuest: false
+            isHeroQuest: false,
+            gameLanguage: "EUR/US"
         };
         this.handleChange = this.handleChange.bind(this);
         this.getPassword = this.getPassword.bind(this);
@@ -132,8 +518,17 @@ class App extends Component<{}, AppState> {
         }
     }
 
-    handleChange(event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
+    handleChange(event: ChangeEvent<HTMLInputElement | HTMLSelectElement> | { target: { name: string, value: any } }) {
         let value: string | boolean = event.target.value;
+        
+        // Handle boolean values for buttons
+        if (event.target.name === 'isLinkedGame' || event.target.name === 'isHeroQuest') {
+            this.setState({
+                [event.target.name]: event.target.value
+            } as any);
+            return;
+        }
+        
         if ((event.target as HTMLInputElement).type === "checkbox") {
             value = (event.target as HTMLInputElement).checked;
         }
@@ -209,145 +604,23 @@ class App extends Component<{}, AppState> {
         let memoryPassword = this.state.memoryPassword;
 
         return (
-            <Container size="xl" px="md">
-                <Paper shadow="md" p="xl" mt="md" style={{ backgroundColor: '#f8f9fa' }}>
-                    <Title order={1} ta="center" mb="xl" c="dark.8">
+            <Container>
+                <Paper>
+                    <Title order={1} ta="center">
                         Zelda Oracle Password Generator
                     </Title>
                     
                     <Grid>
-                        <Grid.Col span={{ base: 12, md: 8 }}>
-                            <Grid>
-                                <Grid.Col span={{ base: 12, sm: 6 }}>
-                                    <Group>
-                                        <CardBlock
-                                            title="Ages"
-                                            changeGame={(e) => this.handleChangeState(e, "game")}
-                                            currentGame={this.state.game}
-                                            activeImg={nayru}
-                                            inactiveImg={nayru_inactive}
-                                        />
-                                        <CardBlock
-                                            title="Seasons"
-                                            changeGame={(e) => this.handleChangeState(e, "game")}
-                                            currentGame={this.state.game}
-                                            activeImg={din}
-                                            inactiveImg={din_inactive}
-                                        />
-                                    </Group>
-                                </Grid.Col>
-
-                                <Grid.Col span={{ base: 12, sm: 6 }}>
-                                    <Group>
-                                        <CardBlock
-                                            title="Linked Game"
-                                            changeGame={this.handleToggleLinkedGame}
-                                            currentGame={this.state.isLinkedGame}
-                                            activeImg={gameIsAges ? link_ages : link_seasons}
-                                            inactiveImg={link}
-                                        />
-                                        <CardBlock
-                                            title="Hero's Quest"
-                                            changeGame={this.handleToggleHerosQuest}
-                                            currentGame={this.state.isHeroQuest}
-                                            activeImg={triforce}
-                                            inactiveImg={triforce}
-                                        />
-                                    </Group>
-                                </Grid.Col>
-
-                                <Grid.Col span={12}>
-                                    <Group justify="center">
-                                        <CardBlock
-                                            title="Ricky"
-                                            changeGame={(e) => this.handleChangeState(e, "animal")}
-                                            currentGame={this.state.animal}
-                                            activeImg={ricky}
-                                            inactiveImg={ricky_inactive}
-                                        />
-                                        <CardBlock
-                                            title="Dimitri"
-                                            changeGame={(e) => this.handleChangeState(e, "animal")}
-                                            currentGame={this.state.animal}
-                                            activeImg={dimitri}
-                                            inactiveImg={dimitri_inactive}
-                                        />
-                                        <CardBlock
-                                            title="Moosh"
-                                            changeGame={(e) => this.handleChangeState(e, "animal")}
-                                            currentGame={this.state.animal}
-                                            activeImg={moosh}
-                                            inactiveImg={moosh_inactive}
-                                        />
-                                    </Group>
-                                </Grid.Col>
-                            </Grid>
+                        <Grid.Col>
+                            <GameSettings 
+                                state={this.state}
+                                handleChange={this.handleChange}
+                                gameIsAges={gameIsAges}
+                            />
                         </Grid.Col>
 
-                        <Grid.Col span={{ base: 12, md: 4 }}>
-                            <Paper shadow="sm" p="md" style={{ backgroundColor: 'white' }}>
-                                <Title order={3} mb="md">Game Settings</Title>
-                                
-                                <TextInput
-                                    label="Hero Name"
-                                    placeholder="Enter hero name"
-                                    maxLength={5}
-                                    value={this.state.heroName}
-                                    onChange={(event) => this.handleChange({
-                                        target: { name: 'heroName', value: event.currentTarget.value }
-                                    } as any)}
-                                    mb="sm"
-                                />
-
-                                <TextInput
-                                    label="Child Name"
-                                    placeholder="Enter child name"
-                                    maxLength={5}
-                                    value={this.state.childName}
-                                    onChange={(event) => this.handleChange({
-                                        target: { name: 'childName', value: event.currentTarget.value }
-                                    } as any)}
-                                    mb="sm"
-                                />
-
-                                <NumberInput
-                                    label="Game ID"
-                                    placeholder="Enter game ID"
-                                    min={1}
-                                    max={32767}
-                                    value={parseInt(this.state.gameID) || undefined}
-                                    onChange={(value) => this.handleChange({
-                                        target: { name: 'gameID', value: value?.toString() || '' }
-                                    } as any)}
-                                    mb="sm"
-                                />
-
-                                <Select
-                                    label="Behavior"
-                                    value={this.state.behavior}
-                                    onChange={(value) => this.handleChange({
-                                        target: { name: 'behavior', value: value || 'Infant' }
-                                    } as any)}
-                                    data={[
-                                        { value: 'Infant', label: 'Infant' },
-                                        { value: 'BouncyA', label: 'BouncyA' },
-                                        { value: 'BouncyB', label: 'BouncyB' },
-                                        { value: 'BouncyC', label: 'BouncyC' },
-                                        { value: 'BouncyD', label: 'BouncyD' },
-                                        { value: 'BouncyE', label: 'BouncyE' },
-                                        { value: 'ShyA', label: 'ShyA' },
-                                        { value: 'ShyB', label: 'ShyB' },
-                                        { value: 'ShyC', label: 'ShyC' },
-                                        { value: 'ShyD', label: 'ShyD' },
-                                        { value: 'ShyE', label: 'ShyE' },
-                                        { value: 'HyperA', label: 'HyperA' },
-                                        { value: 'HyperB', label: 'HyperB' },
-                                        { value: 'HyperC', label: 'HyperC' },
-                                        { value: 'HyperD', label: 'HyperD' },
-                                        { value: 'HyperE', label: 'HyperE' },
-                                    ]}
-                                />
-                            </Paper>
+                        <Grid.Col>
+                            {/* Esta sección se puede usar para mostrar información adicional o dejarla vacía */}
                         </Grid.Col>
                     </Grid>
                     
@@ -383,9 +656,9 @@ class Footer extends Component<FooterProps, FooterState> {
         }
 
         return (
-            <Box mt="xl">
-                <Paper shadow="sm" p="md" style={{ backgroundColor: 'white' }}>
-                    <Group justify="space-between" align="center" mb="md">
+            <Box>
+                <Paper>
+                    <Group justify="space-between" align="center">
                         <Title order={3}>Generated Password</Title>
                         <Button 
                             variant="light" 
@@ -397,9 +670,7 @@ class Footer extends Component<FooterProps, FooterState> {
                     </Group>
                     
                     <Paper 
-                        p="md" 
                         style={{ 
-                            backgroundColor: '#f8f9fa', 
                             fontFamily: 'monospace',
                             fontSize: '16px',
                             fontWeight: 'bold',
@@ -409,9 +680,9 @@ class Footer extends Component<FooterProps, FooterState> {
                     />
                     
                     <Collapse in={this.state.active}>
-                        <Box mt="md">
-                            <Title order={4} mb="sm">Memory Secrets</Title>
-                            <Table striped highlightOnHover>
+                        <Box>
+                            <Title order={4}>Memory Secrets</Title>
+                            <Table striped highlightOnHover withTableBorder withColumnBorders>
                                 <Table.Tbody>
                                     <MemorySecrets password={memoryPassword[0] || "N/A"}
                                                    person={gameIsAges ? "ClockShop" : "King Zora"}/>
@@ -428,7 +699,7 @@ class Footer extends Component<FooterProps, FooterState> {
                                     <MemorySecrets password={memoryPassword[6] || "N/A"} 
                                                    person={gameIsAges ? "Temple" : "Mamamu"}/>
                                     <MemorySecrets password={memoryPassword[7] || "N/A"} 
-                                                   person={gameIsAges ? "Deku" : "Tingle"}/>
+                                                   person={gameIsAges ? "Diver" : "Tingle"}/>
                                     <MemorySecrets password={memoryPassword[8] || "N/A"} 
                                                    person={gameIsAges ? "Biggoron" : "Elder"}/>
                                     <MemorySecrets password={memoryPassword[9] || "N/A"} 
@@ -453,57 +724,6 @@ class MemorySecrets extends Component<MemorySecretsProps> {
                 </Table.Td>
             </Table.Tr>
         );
-    }
-}
-
-class CardBlock extends Component<CardBlockProps> {
-    constructor(props: CardBlockProps) {
-        super(props);
-        this.handleClick = this.handleClick.bind(this);
-    }
-
-    handleClick(game: string) {
-        this.props.changeGame(game);
-    }
-
-    render() {
-        let isActive;
-        if (this.props.title === "Linked Game" || this.props.title === "Hero's Quest") {
-            isActive = this.props.currentGame === true;
-        } else {
-            isActive = this.props.currentGame === this.props.title;
-        }
-        
-        const image = isActive ? this.props.activeImg : this.props.inactiveImg;
-
-        return (
-            <Card
-                shadow={isActive ? "lg" : "sm"}
-                padding="md"
-                radius="md"
-                style={{
-                    cursor: 'pointer',
-                    border: isActive ? '2px solid #228be6' : '2px solid transparent',
-                    transition: 'all 0.2s ease',
-                    minWidth: '120px',
-                    textAlign: 'center'
-                }}
-                onClick={() => this.handleClick(this.props.title)}
-            >
-                <Card.Section>
-                    <Image
-                        src={image}
-                        height={80}
-                        alt={this.props.title}
-                        fit="contain"
-                    />
-                </Card.Section>
-
-                <Text fw={500} size="sm" mt="xs" ta="center">
-                    {this.props.title}
-                </Text>
-            </Card>
-        )
     }
 }
 
