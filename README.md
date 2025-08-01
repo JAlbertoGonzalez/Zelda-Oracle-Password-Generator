@@ -4,6 +4,6 @@ Zelda Oracle Password Generator is a web-based (React, JavaScript) implementatio
 
 ## Usage
 
-The [Zelda Oracle Password Generator can be used here](https://jerryto.github.io/Zelda-Oracle-Password-Generator/).
+The [Zelda Oracle Password Generator can be used here](https://JAlbertoGonzalez.github.io/Zelda-Oracle-Password-Generator/).
 
 Users can generate Game and Memory secrets by entering valid values into their respective fields. Support for Ring secrets and secret decoding will be implemented in a future release.

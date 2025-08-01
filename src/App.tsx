@@ -1,4 +1,21 @@
 import { Component, type ChangeEvent } from 'react';
+import { 
+    Container, 
+    Title, 
+    Grid, 
+    Paper, 
+    Group, 
+    TextInput, 
+    NumberInput, 
+    Select, 
+    Card, 
+    Image, 
+    Text,
+    Box,
+    Collapse,
+    Button,
+    Table
+} from '@mantine/core';
 import './App.css';
 
 import { updateProperties } from './zeldaOraclePasswordGenerator';
@@ -192,113 +209,151 @@ class App extends Component<{}, AppState> {
         let memoryPassword = this.state.memoryPassword;
 
         return (
-            <div className="App">
-                <header className="App-header">
-                    <h1 className="App-title">Zelda Oracle Password Generator</h1>
-                </header>
-                <div className="main">
-                    <div id="leftColumn">
-                        <div>
-                            <CardBlock
-                                title="Ages"
-                                changeGame={(e) => this.handleChangeState(e, "game")}
-                                currentGame={this.state.game}
-                                activeImg={nayru}
-                                inactiveImg={nayru_inactive}
-                            />
-                            <CardBlock
-                                title="Seasons"
-                                changeGame={(e) => this.handleChangeState(e, "game")}
-                                currentGame={this.state.game}
-                                activeImg={din}
-                                inactiveImg={din_inactive}
-                            />
-                        </div>
+            <Container size="xl" px="md">
+                <Paper shadow="md" p="xl" mt="md" style={{ backgroundColor: '#f8f9fa' }}>
+                    <Title order={1} ta="center" mb="xl" c="dark.8">
+                        Zelda Oracle Password Generator
+                    </Title>
+                    
+                    <Grid>
+                        <Grid.Col span={{ base: 12, md: 8 }}>
+                            <Grid>
+                                <Grid.Col span={{ base: 12, sm: 6 }}>
+                                    <Group>
+                                        <CardBlock
+                                            title="Ages"
+                                            changeGame={(e) => this.handleChangeState(e, "game")}
+                                            currentGame={this.state.game}
+                                            activeImg={nayru}
+                                            inactiveImg={nayru_inactive}
+                                        />
+                                        <CardBlock
+                                            title="Seasons"
+                                            changeGame={(e) => this.handleChangeState(e, "game")}
+                                            currentGame={this.state.game}
+                                            activeImg={din}
+                                            inactiveImg={din_inactive}
+                                        />
+                                    </Group>
+                                </Grid.Col>
 
-                        <div>
-                            <CardBlock
-                                title="Linked Game"
-                                changeGame={this.handleToggleLinkedGame}
-                                currentGame={this.state.isLinkedGame}
-                                activeImg={gameIsAges ? link_ages : link_seasons}
-                                inactiveImg={link}
-                            />
-                            <CardBlock
-                                title="Hero's Quest"
-                                changeGame={this.handleToggleHerosQuest}
-                                currentGame={this.state.isHeroQuest}
-                                activeImg={triforce}
-                                inactiveImg={triforce}
-                            />
-                        </div>
+                                <Grid.Col span={{ base: 12, sm: 6 }}>
+                                    <Group>
+                                        <CardBlock
+                                            title="Linked Game"
+                                            changeGame={this.handleToggleLinkedGame}
+                                            currentGame={this.state.isLinkedGame}
+                                            activeImg={gameIsAges ? link_ages : link_seasons}
+                                            inactiveImg={link}
+                                        />
+                                        <CardBlock
+                                            title="Hero's Quest"
+                                            changeGame={this.handleToggleHerosQuest}
+                                            currentGame={this.state.isHeroQuest}
+                                            activeImg={triforce}
+                                            inactiveImg={triforce}
+                                        />
+                                    </Group>
+                                </Grid.Col>
 
-                        <div>
-                            <CardBlock
-                                title="Ricky"
-                                changeGame={(e) => this.handleChangeState(e, "animal")}
-                                currentGame={this.state.animal}
-                                activeImg={ricky}
-                                inactiveImg={ricky_inactive}
-                            />
-                            <CardBlock
-                                title="Dimitri"
-                                changeGame={(e) => this.handleChangeState(e, "animal")}
-                                currentGame={this.state.animal}
-                                activeImg={dimitri}
-                                inactiveImg={dimitri_inactive}
-                            />
-                            <CardBlock
-                                title="Moosh"
-                                changeGame={(e) => this.handleChangeState(e, "animal")}
-                                currentGame={this.state.animal}
-                                activeImg={moosh}
-                                inactiveImg={moosh_inactive}
-                            />
-                        </div>
-                    </div>
+                                <Grid.Col span={12}>
+                                    <Group justify="center">
+                                        <CardBlock
+                                            title="Ricky"
+                                            changeGame={(e) => this.handleChangeState(e, "animal")}
+                                            currentGame={this.state.animal}
+                                            activeImg={ricky}
+                                            inactiveImg={ricky_inactive}
+                                        />
+                                        <CardBlock
+                                            title="Dimitri"
+                                            changeGame={(e) => this.handleChangeState(e, "animal")}
+                                            currentGame={this.state.animal}
+                                            activeImg={dimitri}
+                                            inactiveImg={dimitri_inactive}
+                                        />
+                                        <CardBlock
+                                            title="Moosh"
+                                            changeGame={(e) => this.handleChangeState(e, "animal")}
+                                            currentGame={this.state.animal}
+                                            activeImg={moosh}
+                                            inactiveImg={moosh_inactive}
+                                        />
+                                    </Group>
+                                </Grid.Col>
+                            </Grid>
+                        </Grid.Col>
 
-                    <div id="rightColumn">
-                        <div className="inputBlock">
-                            <label htmlFor="heroName">Hero Name:</label>
-                            <input type="text" id="heroName" name="heroName" maxLength={5} onChange={this.handleChange}/>
-                        </div>
+                        <Grid.Col span={{ base: 12, md: 4 }}>
+                            <Paper shadow="sm" p="md" style={{ backgroundColor: 'white' }}>
+                                <Title order={3} mb="md">Game Settings</Title>
+                                
+                                <TextInput
+                                    label="Hero Name"
+                                    placeholder="Enter hero name"
+                                    maxLength={5}
+                                    value={this.state.heroName}
+                                    onChange={(event) => this.handleChange({
+                                        target: { name: 'heroName', value: event.currentTarget.value }
+                                    } as any)}
+                                    mb="sm"
+                                />
 
-                        <div className="inputBlock">
-                            <label htmlFor="childName">Child Name:</label>
-                            <input type="text" id="childName" name="childName" maxLength={5} onChange={this.handleChange}/>
-                        </div>
+                                <TextInput
+                                    label="Child Name"
+                                    placeholder="Enter child name"
+                                    maxLength={5}
+                                    value={this.state.childName}
+                                    onChange={(event) => this.handleChange({
+                                        target: { name: 'childName', value: event.currentTarget.value }
+                                    } as any)}
+                                    mb="sm"
+                                />
 
-                        <div className="inputBlock">
-                            <label htmlFor="gameID">ID: </label>
-                            <input type="number" id="gameID" name="gameID" min="1" max="32767"
-                                   onInput={this.checkValidID} onChange={this.handleChange}/>
-                        </div>
+                                <NumberInput
+                                    label="Game ID"
+                                    placeholder="Enter game ID"
+                                    min={1}
+                                    max={32767}
+                                    value={parseInt(this.state.gameID) || undefined}
+                                    onChange={(value) => this.handleChange({
+                                        target: { name: 'gameID', value: value?.toString() || '' }
+                                    } as any)}
+                                    mb="sm"
+                                />
 
-                        <div className="inputBlock">
-                            <label htmlFor="behavior">Behavior: </label>
-                            <select id="behavior" name="behavior" onChange={this.handleChange}>
-                                <option value="Infant">Infant</option>
-                                <option value="BouncyA">BouncyA</option>
-                                <option value="BouncyB">BouncyB</option>
-                                <option value="BouncyC">BouncyC</option>
-                                <option value="BouncyD">BouncyD</option>
-                                <option value="BouncyE">BouncyE</option>
-                                <option value="ShyA">ShyA</option>
-                                <option value="ShyB">ShyB</option>
-                                <option value="ShyC">ShyC</option>
-                                <option value="ShyD">ShyD</option>
-                                <option value="ShyE">ShyE</option>
-                                <option value="HyperA">HyperA</option>
-                                <option value="HyperB">HyperB</option>
-                                <option value="HyperC">HyperC</option>
-                                <option value="HyperD">HyperD</option>
-                                <option value="HyperE">HyperE</option>
-                            </select>
-                        </div>
-                    </div>
+                                <Select
+                                    label="Behavior"
+                                    value={this.state.behavior}
+                                    onChange={(value) => this.handleChange({
+                                        target: { name: 'behavior', value: value || 'Infant' }
+                                    } as any)}
+                                    data={[
+                                        { value: 'Infant', label: 'Infant' },
+                                        { value: 'BouncyA', label: 'BouncyA' },
+                                        { value: 'BouncyB', label: 'BouncyB' },
+                                        { value: 'BouncyC', label: 'BouncyC' },
+                                        { value: 'BouncyD', label: 'BouncyD' },
+                                        { value: 'BouncyE', label: 'BouncyE' },
+                                        { value: 'ShyA', label: 'ShyA' },
+                                        { value: 'ShyB', label: 'ShyB' },
+                                        { value: 'ShyC', label: 'ShyC' },
+                                        { value: 'ShyD', label: 'ShyD' },
+                                        { value: 'ShyE', label: 'ShyE' },
+                                        { value: 'HyperA', label: 'HyperA' },
+                                        { value: 'HyperB', label: 'HyperB' },
+                                        { value: 'HyperC', label: 'HyperC' },
+                                        { value: 'HyperD', label: 'HyperD' },
+                                        { value: 'HyperE', label: 'HyperE' },
+                                    ]}
+                                />
+                            </Paper>
+                        </Grid.Col>
+                    </Grid>
+                    
                     <Footer gameIsAges={gameIsAges} memoryPassword={memoryPassword} htmlPassword={htmlPassword}/>
-                </div>
-            </div>
+                </Paper>
+            </Container>
         );
     }
 }
@@ -327,35 +382,63 @@ class Footer extends Component<FooterProps, FooterState> {
             htmlPassword = "The password will appear here.";
         }
 
-        let footerClass = "";
-        let memoryTableClass = "memoryTable";
-        let arrow = "▲";
-
-        if (this.state.active) {
-            footerClass = "footerActive";
-            memoryTableClass = "memoryTable memoryTableActive";
-            arrow = "▼";
-        }
         return (
-            <div id="footer" className={footerClass}>
-                <div id="expandFooter" onClick={this.expandFooter}>{arrow}</div>
-                <div className="password passwordText" dangerouslySetInnerHTML={{__html: htmlPassword}}/>
-                <table className={memoryTableClass}>
-                    <tbody>
-                    <MemorySecrets password={memoryPassword[0] || "N/A"}
-                                   person={gameIsAges ? "ClockShop" : "King Zora"}/>
-                    <MemorySecrets password={memoryPassword[1] || "N/A"} person={gameIsAges ? "Graveyard" : "Fairy"}/>
-                    <MemorySecrets password={memoryPassword[2] || "N/A"} person={gameIsAges ? "Subrosian" : "Troy"}/>
-                    <MemorySecrets password={memoryPassword[3] || "N/A"} person={gameIsAges ? "Diver" : "Plen"}/>
-                    <MemorySecrets password={memoryPassword[4] || "N/A"} person={gameIsAges ? "Smith" : "Library"}/>
-                    <MemorySecrets password={memoryPassword[5] || "N/A"} person={gameIsAges ? "Pirate" : "Tokay"}/>
-                    <MemorySecrets password={memoryPassword[6] || "N/A"} person={gameIsAges ? "Temple" : "Mamamu"}/>
-                    <MemorySecrets password={memoryPassword[7] || "N/A"} person={gameIsAges ? "Deku" : "Tingle"}/>
-                    <MemorySecrets password={memoryPassword[8] || "N/A"} person={gameIsAges ? "Biggoron" : "Elder"}/>
-                    <MemorySecrets password={memoryPassword[9] || "N/A"} person={gameIsAges ? "Ruul" : "Symmetry"}/>
-                    </tbody>
-                </table>
-            </div>
+            <Box mt="xl">
+                <Paper shadow="sm" p="md" style={{ backgroundColor: 'white' }}>
+                    <Group justify="space-between" align="center" mb="md">
+                        <Title order={3}>Generated Password</Title>
+                        <Button 
+                            variant="light" 
+                            onClick={this.expandFooter}
+                            size="sm"
+                        >
+                            {this.state.active ? "Hide Memory Secrets ▲" : "Show Memory Secrets ▼"}
+                        </Button>
+                    </Group>
+                    
+                    <Paper 
+                        p="md" 
+                        style={{ 
+                            backgroundColor: '#f8f9fa', 
+                            fontFamily: 'monospace',
+                            fontSize: '16px',
+                            fontWeight: 'bold',
+                            textAlign: 'center'
+                        }}
+                        dangerouslySetInnerHTML={{__html: htmlPassword}}
+                    />
+                    
+                    <Collapse in={this.state.active}>
+                        <Box mt="md">
+                            <Title order={4} mb="sm">Memory Secrets</Title>
+                            <Table striped highlightOnHover>
+                                <Table.Tbody>
+                                    <MemorySecrets password={memoryPassword[0] || "N/A"}
+                                                   person={gameIsAges ? "ClockShop" : "King Zora"}/>
+                                    <MemorySecrets password={memoryPassword[1] || "N/A"} 
+                                                   person={gameIsAges ? "Graveyard" : "Fairy"}/>
+                                    <MemorySecrets password={memoryPassword[2] || "N/A"} 
+                                                   person={gameIsAges ? "Subrosian" : "Troy"}/>
+                                    <MemorySecrets password={memoryPassword[3] || "N/A"} 
+                                                   person={gameIsAges ? "Diver" : "Plen"}/>
+                                    <MemorySecrets password={memoryPassword[4] || "N/A"} 
+                                                   person={gameIsAges ? "Smith" : "Library"}/>
+                                    <MemorySecrets password={memoryPassword[5] || "N/A"} 
+                                                   person={gameIsAges ? "Pirate" : "Tokay"}/>
+                                    <MemorySecrets password={memoryPassword[6] || "N/A"} 
+                                                   person={gameIsAges ? "Temple" : "Mamamu"}/>
+                                    <MemorySecrets password={memoryPassword[7] || "N/A"} 
+                                                   person={gameIsAges ? "Deku" : "Tingle"}/>
+                                    <MemorySecrets password={memoryPassword[8] || "N/A"} 
+                                                   person={gameIsAges ? "Biggoron" : "Elder"}/>
+                                    <MemorySecrets password={memoryPassword[9] || "N/A"} 
+                                                   person={gameIsAges ? "Ruul" : "Symmetry"}/>
+                                </Table.Tbody>
+                            </Table>
+                        </Box>
+                    </Collapse>
+                </Paper>
+            </Box>
         );
     }
 }
@@ -363,10 +446,12 @@ class Footer extends Component<FooterProps, FooterState> {
 class MemorySecrets extends Component<MemorySecretsProps> {
     render() {
         return (
-            <tr>
-                <td>{this.props.person} Secret</td>
-                <td className="passwordText">{this.props.password}</td>
-            </tr>
+            <Table.Tr>
+                <Table.Td>{this.props.person} Secret</Table.Td>
+                <Table.Td style={{ fontFamily: 'monospace', fontWeight: 'bold' }}>
+                    {this.props.password}
+                </Table.Td>
+            </Table.Tr>
         );
     }
 }
@@ -382,34 +467,42 @@ class CardBlock extends Component<CardBlockProps> {
     }
 
     render() {
-        let imgAlt = this.props.title;
         let isActive;
         if (this.props.title === "Linked Game" || this.props.title === "Hero's Quest") {
             isActive = this.props.currentGame === true;
         } else {
             isActive = this.props.currentGame === this.props.title;
         }
-        let image = isActive ? this.props.activeImg : this.props.inactiveImg;
-        let containerClass = isActive ? "cardBlock" : "cardBlock inactive";
+        
+        const image = isActive ? this.props.activeImg : this.props.inactiveImg;
 
-        let imgClass = "cardBlockImage";
-
-        if (this.props.title === "Ages" || this.props.title === "Linked Game" || this.props.title === "Hero's Quest" || this.props.title === "Dimitri" || this.props.title === "Moosh") {
-            imgClass = imgClass + " cardBlockAges";
-        }
-        if (this.props.title === "Dimitri" || this.props.title === "Moosh") {
-            imgClass = imgClass + " cardBlockAnimal";
-        }
-        if (this.props.title === "Dimitri" || this.props.title === "Ricky" || this.props.title === "Moosh") {
-            containerClass = containerClass + " cardBlockTall";
-        }
-
-        let titleClass = "cardBlockTitle";
         return (
-            <div className={containerClass} onClick={() => this.handleClick(this.props.title)}>
-                <div className={titleClass}>{this.props.title}</div>
-                <img src={image} className={imgClass} alt={imgAlt}/>
-            </div>
+            <Card
+                shadow={isActive ? "lg" : "sm"}
+                padding="md"
+                radius="md"
+                style={{
+                    cursor: 'pointer',
+                    border: isActive ? '2px solid #228be6' : '2px solid transparent',
+                    transition: 'all 0.2s ease',
+                    minWidth: '120px',
+                    textAlign: 'center'
+                }}
+                onClick={() => this.handleClick(this.props.title)}
+            >
+                <Card.Section>
+                    <Image
+                        src={image}
+                        height={80}
+                        alt={this.props.title}
+                        fit="contain"
+                    />
+                </Card.Section>
+
+                <Text fw={500} size="sm" mt="xs" ta="center">
+                    {this.props.title}
+                </Text>
+            </Card>
         )
     }
 }
