@@ -469,6 +469,12 @@ class App extends Component<{}, AppState> {
         this.handleToggleLinkedGame = this.handleToggleLinkedGame.bind(this);
         this.handleToggleHerosQuest = this.handleToggleHerosQuest.bind(this);
         this.checkValidID = this.checkValidID.bind(this);
+        this.updatePassword = this.updatePassword.bind(this);
+    }
+
+    componentDidMount() {
+        // Generate initial password with default values
+        this.updatePassword();
     }
 
     componentDidUpdate(_prevProps: {}, prevState: AppState) {
@@ -489,6 +495,21 @@ class App extends Component<{}, AppState> {
                 memoryPassword: passwords.slice(1).map(p => p.join(''))
             });
         }
+    }
+
+    updatePassword() {
+        let passwords = this.getPassword();
+
+        if (!passwords) {
+            return;
+        }
+
+        let newPassword = passwords[0];
+
+        this.setState({
+            mainPassword: newPassword,
+            memoryPassword: passwords.slice(1).map(p => p.join(''))
+        });
     }
 
     getPassword(): string[][] | undefined {
