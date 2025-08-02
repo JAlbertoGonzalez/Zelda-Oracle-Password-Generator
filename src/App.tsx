@@ -11,7 +11,6 @@ import {
     Image, 
     Text,
     Box,
-    Collapse,
     Button,
     Table,
     SegmentedControl,
@@ -21,9 +20,7 @@ import {
     IconUser, 
     IconUsers, 
     IconId, 
-    IconMoodKid,
-    IconChevronDown,
-    IconChevronUp
+    IconMoodKid
 } from '@tabler/icons-react';
 import ReactCountryFlag from "react-country-flag";
 import './App.css';
@@ -60,16 +57,6 @@ interface AppState {
     gameLanguage: string;
 }
 
-interface FooterProps {
-    gameIsAges: boolean;
-    memoryPassword: string[];
-    htmlPassword: string;
-}
-
-interface FooterState {
-    active: boolean;
-}
-
 interface MemorySecretsProps {
     password: string;
     person: string;
@@ -86,8 +73,8 @@ class GameSettings extends Component<GameSettingsProps> {
         const { state, handleChange, gameIsAges } = this.props;
         
         return (
-            <Paper>
-                <Title order={3}>Game Settings</Title>
+            <Paper p="md">
+                <Title order={3} mb="md">Game Settings</Title>
                 
                 <Box style={{
                     display: 'grid',
@@ -607,113 +594,78 @@ class App extends Component<{}, AppState> {
         let memoryPassword = this.state.memoryPassword;
 
         return (
-            <Container>
-                <Paper>
-                    <Title order={1} ta="center">
-                        Zelda Oracle Password Generator
-                    </Title>
-                    
-                    <Grid>
-                        <Grid.Col span={{ base: 12, md: 6 }}>
+            <Container size="xl">
+                <Title order={1} ta="center" mb="xl">
+                    Zelda Oracle Password Generator
+                </Title>
+                
+                <Grid>
+                    {/* Columna izquierda - Configuración del usuario */}
+                    <Grid.Col span={{ base: 12, lg: 6 }}>
+                        <Box style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                             <GameSettings 
                                 state={this.state}
                                 handleChange={this.handleChange}
                                 gameIsAges={gameIsAges}
                             />
-                        </Grid.Col>
-
-                        <Grid.Col span={{ base: 12, md: 6 }}>
                             <RingsComponent />
-                        </Grid.Col>
-                    </Grid>
-                    
-                    <Footer gameIsAges={gameIsAges} memoryPassword={memoryPassword} htmlPassword={htmlPassword}/>
-                </Paper>
-            </Container>
-        );
-    }
-}
-
-class Footer extends Component<FooterProps, FooterState> {
-    constructor(props: FooterProps) {
-        super(props);
-        this.state = {
-            active: false
-        };
-        this.expandFooter = this.expandFooter.bind(this);
-    }
-
-    expandFooter() {
-        this.setState((prevState) => ({
-            active: !prevState.active
-        }));
-    }
-
-    render() {
-        let gameIsAges = this.props.gameIsAges;
-        let memoryPassword = this.props.memoryPassword;
-        let htmlPassword = this.props.htmlPassword;
-
-        if (htmlPassword.length < 10) {
-            htmlPassword = "The password will appear here.";
-        }
-
-        return (
-            <Box>
-                <Paper>
-                    <Group justify="space-between" align="center">
-                        <Title order={3}>Generated Password</Title>
-                        <Button 
-                            variant="light" 
-                            onClick={this.expandFooter}
-                            size="sm"
-                            rightSection={this.state.active ? <IconChevronUp size={16} /> : <IconChevronDown size={16} />}
-                        >
-                            {this.state.active ? "Hide Memory Secrets" : "Show Memory Secrets"}
-                        </Button>
-                    </Group>
-                    
-                    <Paper 
-                        style={{ 
-                            fontFamily: 'monospace',
-                            fontSize: '16px',
-                            fontWeight: 'bold',
-                            textAlign: 'center'
-                        }}
-                        dangerouslySetInnerHTML={{__html: htmlPassword}}
-                    />
-                    
-                    <Collapse in={this.state.active}>
-                        <Box>
-                            <Title order={4}>Memory Secrets</Title>
-                            <Table striped highlightOnHover withTableBorder withColumnBorders>
-                                <Table.Tbody>
-                                    <MemorySecrets password={memoryPassword[0] || "N/A"}
-                                                   person={gameIsAges ? "ClockShop" : "King Zora"}/>
-                                    <MemorySecrets password={memoryPassword[1] || "N/A"} 
-                                                   person={gameIsAges ? "Graveyard" : "Fairy"}/>
-                                    <MemorySecrets password={memoryPassword[2] || "N/A"} 
-                                                   person={gameIsAges ? "Subrosian" : "Troy"}/>
-                                    <MemorySecrets password={memoryPassword[3] || "N/A"} 
-                                                   person={gameIsAges ? "Diver" : "Plen"}/>
-                                    <MemorySecrets password={memoryPassword[4] || "N/A"} 
-                                                   person={gameIsAges ? "Smith" : "Library"}/>
-                                    <MemorySecrets password={memoryPassword[5] || "N/A"} 
-                                                   person={gameIsAges ? "Pirate" : "Tokay"}/>
-                                    <MemorySecrets password={memoryPassword[6] || "N/A"} 
-                                                   person={gameIsAges ? "Temple" : "Mamamu"}/>
-                                    <MemorySecrets password={memoryPassword[7] || "N/A"} 
-                                                   person={gameIsAges ? "Diver" : "Tingle"}/>
-                                    <MemorySecrets password={memoryPassword[8] || "N/A"} 
-                                                   person={gameIsAges ? "Biggoron" : "Elder"}/>
-                                    <MemorySecrets password={memoryPassword[9] || "N/A"} 
-                                                   person={gameIsAges ? "Ruul" : "Symmetry"}/>
-                                </Table.Tbody>
-                            </Table>
                         </Box>
-                    </Collapse>
-                </Paper>
-            </Box>
+                    </Grid.Col>
+
+                    {/* Columna derecha - Resultados */}
+                    <Grid.Col span={{ base: 12, lg: 6 }}>
+                        <Box style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                            {/* Generated Password */}
+                            <Paper p="md">
+                                <Title order={3} mb="md">Generated Password</Title>
+                                <Paper 
+                                    style={{ 
+                                        fontFamily: 'monospace',
+                                        fontSize: '16px',
+                                        fontWeight: 'bold',
+                                        textAlign: 'center',
+                                        padding: '16px',
+                                        backgroundColor: '#f8f9fa',
+                                        border: '1px solid #e9ecef'
+                                    }}
+                                    dangerouslySetInnerHTML={{
+                                        __html: htmlPassword.length >= 10 ? htmlPassword : "The password will appear here."
+                                    }}
+                                />
+                            </Paper>
+
+                            {/* Memory Secrets */}
+                            <Paper p="md">
+                                <Title order={3} mb="md">Memory Secrets</Title>
+                                <Table striped highlightOnHover withTableBorder withColumnBorders>
+                                    <Table.Tbody>
+                                        <MemorySecrets password={memoryPassword[0] || "N/A"}
+                                                       person={gameIsAges ? "ClockShop" : "King Zora"}/>
+                                        <MemorySecrets password={memoryPassword[1] || "N/A"} 
+                                                       person={gameIsAges ? "Graveyard" : "Fairy"}/>
+                                        <MemorySecrets password={memoryPassword[2] || "N/A"} 
+                                                       person={gameIsAges ? "Subrosian" : "Troy"}/>
+                                        <MemorySecrets password={memoryPassword[3] || "N/A"} 
+                                                       person={gameIsAges ? "Diver" : "Plen"}/>
+                                        <MemorySecrets password={memoryPassword[4] || "N/A"} 
+                                                       person={gameIsAges ? "Smith" : "Library"}/>
+                                        <MemorySecrets password={memoryPassword[5] || "N/A"} 
+                                                       person={gameIsAges ? "Pirate" : "Tokay"}/>
+                                        <MemorySecrets password={memoryPassword[6] || "N/A"} 
+                                                       person={gameIsAges ? "Temple" : "Mamamu"}/>
+                                        <MemorySecrets password={memoryPassword[7] || "N/A"} 
+                                                       person={gameIsAges ? "Diver" : "Tingle"}/>
+                                        <MemorySecrets password={memoryPassword[8] || "N/A"} 
+                                                       person={gameIsAges ? "Biggoron" : "Elder"}/>
+                                        <MemorySecrets password={memoryPassword[9] || "N/A"} 
+                                                       person={gameIsAges ? "Ruul" : "Symmetry"}/>
+                                    </Table.Tbody>
+                                </Table>
+                            </Paper>
+                        </Box>
+                    </Grid.Col>
+                </Grid>
+            </Container>
         );
     }
 }

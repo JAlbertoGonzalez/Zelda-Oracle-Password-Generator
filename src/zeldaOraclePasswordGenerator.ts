@@ -239,3 +239,48 @@ function toBytesMemorySecret(): number[] {
 function reverseStr(str: string): string {
     return str.split('').reverse().join('');
 }
+
+// Export helper functions for testing
+export function generateGamePasswordForTesting(
+    gameInput: string, 
+    gameIDInput: string, 
+    heroNameInput: string, 
+    childNameInput: string, 
+    animalInput: number, 
+    behaviorInput: number, 
+    isLinkedGameInput: boolean, 
+    isHeroQuestInput: boolean
+): string {
+    const oldGame = game;
+    const oldGameID = gameID;
+    const oldHeroName = heroName;
+    const oldChildName = childName;
+    const oldAnimal = animal;
+    const oldBehavior = behavior;
+    const oldIsLinkedGame = isLinkedGame;
+    const oldIsHeroQuest = isHeroQuest;
+
+    try {
+        game = gameInput;
+        gameID = Number(gameIDInput);
+        heroName = convertStringToBinary(heroNameInput);
+        childName = convertStringToBinary(childNameInput);
+        animal = animalInput;
+        behavior = behaviorInput;
+        isLinkedGame = isLinkedGameInput;
+        isHeroQuest = isHeroQuestInput;
+
+        // Solo retornar el game password, no todos los passwords
+        return convertIntegersToSymbols(toBytes()).join('');
+    } finally {
+        // Restore original values
+        game = oldGame;
+        gameID = oldGameID;
+        heroName = oldHeroName;
+        childName = oldChildName;
+        animal = oldAnimal;
+        behavior = oldBehavior;
+        isLinkedGame = oldIsLinkedGame;
+        isHeroQuest = oldIsHeroQuest;
+    }
+}

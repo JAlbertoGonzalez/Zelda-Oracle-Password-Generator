@@ -41,7 +41,7 @@ class RingsComponent extends Component<RingsComponentProps, RingsComponentState>
 
     toggleRing = (index: number) => {
         const { currentPage, showAll } = this.state;
-        const globalIndex = showAll ? index : (currentPage * 16) + index; // Calcular índice según el modo
+        const globalIndex = showAll ? index : (currentPage * 16) + index; // Calculate index according to mode
         
         this.setState(prevState => ({
             selectedRings: prevState.selectedRings.map((ring, i) => 
@@ -51,12 +51,12 @@ class RingsComponent extends Component<RingsComponentProps, RingsComponentState>
     }
 
     changePage = (page: number) => {
-        // Navegación infinita: si va más allá de los límites, vuelve al otro extremo
+        // Infinite navigation: if it goes beyond limits, return to the other end
         let targetPage = page;
         if (page < 0) {
-            targetPage = 3; // Ir a la última caja
+            targetPage = 3; // Go to last box
         } else if (page > 3) {
-            targetPage = 0; // Ir a la primera caja
+            targetPage = 0; // Go to first box
         }
         this.setState({ currentPage: targetPage });
     }
@@ -72,58 +72,58 @@ class RingsComponent extends Component<RingsComponentProps, RingsComponentState>
     toggleShowAll = () => {
         this.setState(prevState => ({ 
             showAll: !prevState.showAll,
-            currentPage: 0 // Resetear a primera caja cuando se cambie el modo
+            currentPage: 0 // Reset to first box when mode changes
         }));
     }
 
     render() {
         const { currentPage, selectedRings, isModalOpen, showAll } = this.state;
-        const startIndex = showAll ? 0 : currentPage * 16; // Si showAll es true, empezar desde 0
-        const ringsToShow = showAll ? 64 : 16; // Mostrar todos los anillos o solo 16
+        const startIndex = showAll ? 0 : currentPage * 16; // If showAll is true, start from 0
+        const ringsToShow = showAll ? 64 : 16; // Show all rings or only 16
         const currentPageRings = selectedRings.slice(startIndex, startIndex + ringsToShow);
 
-        // Función para obtener información del anillo
+        // Function to get ring information
         const getRingInfo = (ringIndex: number) => {
             const totalRingIndex = showAll ? ringIndex : startIndex + ringIndex;
             const ringData = ringsData.find(ring => ring.id === totalRingIndex + 1);
-            return ringData || { name: `Anillo ${totalRingIndex + 1}`, effect: 'Información no disponible', image: '' };
+            return ringData || { name: `Ring ${totalRingIndex + 1}`, effect: 'Information not available', image: '' };
         };
 
         return (
             <>
-                {/* Botón para abrir la modal de anillos */}
+                {/* Button to open rings modal */}
                 <Paper>
-                    <Title order={3}>Anillos</Title>
+                    <Title order={3}>Rings</Title>
                     <Text size="sm" c="dimmed" mb="md">
-                        Seleccionados: {selectedRings.filter(ring => ring).length} / 64
+                        Selected: {selectedRings.filter(ring => ring).length} / 64
                     </Text>
                     <Button 
                         onClick={this.openModal}
                         fullWidth
                         variant="outline"
                     >
-                        Gestionar Anillos
+                        Manage Rings
                     </Button>
                 </Paper>
 
-                {/* Modal con la colección de anillos */}
+                {/* Modal with rings collection */}
                 <Modal
                     opened={isModalOpen}
                     onClose={this.closeModal}
-                    title="Colección de Anillos"
+                    title="Ring Collection"
                     size={showAll ? "95%" : "xl"}
                     centered
                 >
-                    {/* Número de caja arriba (solo en modo paginado) */}
+                    {/* Box number above (paginated mode only) */}
                     {!showAll && (
                         <Group justify="center" mb="md">
                             <Text size="lg" fw={500} c="blue">
-                                Caja {currentPage + 1}/4
+                                Box {currentPage + 1}/4
                             </Text>
                         </Group>
                     )}
 
-                    {/* Grid de anillos con navegación lateral (solo en modo paginado) */}
+                    {/* Ring grid with side navigation (paginated mode only) */}
                     {!showAll ? (
                         <Box style={{
                             display: 'flex',
@@ -141,7 +141,7 @@ class RingsComponent extends Component<RingsComponentProps, RingsComponentState>
                                 <IconChevronLeft size={16} />
                             </Button>
 
-                            {/* Grid de anillos 8x2 */}
+                            {/* Ring grid 8x2 */}
                             <Box style={{
                                 display: 'grid',
                                 gridTemplateColumns: 'repeat(8, 1fr)',
@@ -160,7 +160,7 @@ class RingsComponent extends Component<RingsComponentProps, RingsComponentState>
                                                         {ringInfo.name}
                                                     </Text>
                                                     <Text size="xs" c="gray" mb="xs">
-                                                        Anillo #{startIndex + index + 1}
+                                                        Ring #{startIndex + index + 1}
                                                     </Text>
                                                     <Text size="xs">
                                                         {ringInfo.effect}
@@ -219,7 +219,7 @@ class RingsComponent extends Component<RingsComponentProps, RingsComponentState>
                             </Button>
                         </Box>
                     ) : (
-                        /* Grid de todos los anillos - 8x8 */
+                        /* All rings grid - 8x8 */
                         <Box style={{
                             display: 'grid',
                             gridTemplateColumns: 'repeat(8, 1fr)',
@@ -244,7 +244,7 @@ class RingsComponent extends Component<RingsComponentProps, RingsComponentState>
                                                     {ringInfo.name}
                                                 </Text>
                                                 <Text size="xs" c="gray" mb="xs">
-                                                    Anillo #{index + 1}
+                                                    Ring #{index + 1}
                                                 </Text>
                                                 <Text size="xs">
                                                     {ringInfo.effect}
@@ -296,20 +296,20 @@ class RingsComponent extends Component<RingsComponentProps, RingsComponentState>
                         </Box>
                     )}
 
-                    {/* Botón Ver Todos debajo de la caja de anillos */}
+                    {/* Show All button below the rings box */}
                     <Group justify="center" mt="md">
                         <Button
                             variant={showAll ? "filled" : "outline"}
                             size="sm"
                             onClick={this.toggleShowAll}
                         >
-                            {showAll ? "Modo Cajas" : "Ver Todos"}
+                            {showAll ? "Box Mode" : "Show All"}
                         </Button>
                     </Group>
 
-                    {/* Contador de anillos seleccionados */}
+                    {/* Selected rings counter */}
                     <Text ta="center" mt="md" size="sm" fw={500}>
-                        Anillos seleccionados: {selectedRings.filter(ring => ring).length} / 64
+                        Selected rings: {selectedRings.filter(ring => ring).length} / 64
                     </Text>
                 </Modal>
             </>
