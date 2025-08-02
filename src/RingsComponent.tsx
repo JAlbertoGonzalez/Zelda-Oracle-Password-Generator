@@ -76,6 +76,42 @@ class RingsComponent extends Component<RingsComponentProps, RingsComponentState>
         }));
     }
 
+    selectAllRings = () => {
+        this.setState({
+            selectedRings: Array(64).fill(true)
+        });
+    }
+
+    deselectAllRings = () => {
+        this.setState({
+            selectedRings: Array(64).fill(false)
+        });
+    }
+
+    selectAgesRings = () => {
+        const newSelectedRings = Array(64).fill(false);
+        ringsData.forEach((ring, index) => {
+            if (index < 64 && (ring.game.includes('A') || ring.game.includes('Ages'))) {
+                newSelectedRings[index] = true;
+            }
+        });
+        this.setState({
+            selectedRings: newSelectedRings
+        });
+    }
+
+    selectSeasonsRings = () => {
+        const newSelectedRings = Array(64).fill(false);
+        ringsData.forEach((ring, index) => {
+            if (index < 64 && (ring.game.includes('S') || ring.game.includes('Seasons'))) {
+                newSelectedRings[index] = true;
+            }
+        });
+        this.setState({
+            selectedRings: newSelectedRings
+        });
+    }
+
     render() {
         const { currentPage, selectedRings, isModalOpen, showAll } = this.state;
         const startIndex = showAll ? 0 : currentPage * 16; // If showAll is true, start from 0
@@ -114,6 +150,46 @@ class RingsComponent extends Component<RingsComponentProps, RingsComponentState>
                     size={showAll ? "95%" : "xl"}
                     centered
                 >
+                    {/* Mass selection buttons */}
+                    <Box mb="md">
+                        <Text size="sm" c="dimmed" ta="center" mb="xs">
+                            Quick Selection
+                        </Text>
+                        <Group justify="center" gap="xs">
+                            <Button
+                                variant="outline"
+                                size="xs"
+                                onClick={this.selectAllRings}
+                                color="green"
+                            >
+                                Select All
+                            </Button>
+                            <Button
+                                variant="outline"
+                                size="xs"
+                                onClick={this.deselectAllRings}
+                                color="red"
+                            >
+                                Deselect All
+                            </Button>
+                            <Button
+                                variant="outline"
+                                size="xs"
+                                onClick={this.selectAgesRings}
+                                color="blue"
+                            >
+                                Ages Only
+                            </Button>
+                            <Button
+                                variant="outline"
+                                size="xs"
+                                onClick={this.selectSeasonsRings}
+                                color="orange"
+                            >
+                                Seasons Only
+                            </Button>
+                        </Group>
+                    </Box>
                     {/* Box number above (paginated mode only) */}
                     {!showAll && (
                         <Group justify="center" mb="md">
