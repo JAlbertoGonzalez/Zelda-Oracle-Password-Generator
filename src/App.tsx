@@ -326,9 +326,9 @@ class GameSettings extends Component<GameSettingsProps> {
                     <Text size="sm" fw={500}>Game ID</Text>
                     <NumberInput
                         placeholder="Enter game ID"
-                        min={1}
+                        min={0}
                         max={32767}
-                        value={parseInt(state.gameID) || undefined}
+                        value={state.gameID !== '' ? parseInt(state.gameID) : undefined}
                         onChange={(value) => handleChange({
                             target: { name: 'gameID', value: value?.toString() || '' }
                         } as any)}
@@ -466,9 +466,9 @@ class App extends Component<{}, AppState> {
             mainPassword: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
             memoryPassword: ["", "", "", "", "", "", "", "", "", ""],
             game: "Ages",
-            gameID: "",
-            heroName: "",
-            childName: "",
+            gameID: "7098",
+            heroName: "Link",
+            childName: "Pip",
             animal: "Ricky",
             behavior: "Infant",
             isLinkedGame: false,

@@ -1,0 +1,477 @@
+
+<html><head><meta http-equiv="content-type" content="text/html; charset=UTF-8"><meta charset="utf-8"><title>Zelda Password System</title>
+<style>
+
+/* Made by Jimmy Gustafsson, jimmy_g_84[at](sounds like "hot male").com */
+
+.z {border:1px solid black;border-collapse:collapse;}
+.z td {width:16px;height:22px;text-align:center;padding:0px;}
+.z .descr {text-align:left;padding-left:5px;white-space:nowrap;}
+.zColumn {display:inline-block;vertical-align:top;margin:3px;margin-top:10px;}
+#pwdata {text-align:left;}
+#pwdata>p {text-align:center;margin-top:0px;margin-bottom:0px;}
+button {font-size:42px;border-radius:12px;}
+button.chosen {background-color:#0066ff;}
+input[type=number], input[type=text] {width:100px;}
+#error {max-width:500px;overflow-wrap:break-word;font-weight:bold;}
+</style>
+<script>
+lang=0; // 0 = eur/us, 1 = jp
+cipherEN=[21,35,46,4,13,63,26,16,58,47,30,32,15,62,54,55,9,41,59,49,2,22,61,56,40,19,52,50,1,11,10,53,14,27,18,44,33,45,37,48,25,42,6,57,60,23,51,24];
+cipherJP=[49,9,41,59,24,60,23,51,53,1,11,10,48,33,45,37,32,58,47,30,57,25,42,6,4,21,35,46,50,40,19,52,16,13,63,26,55,15,62,54,56,2,22,61,44,14,27,18];
+cipher=[cipherEN,cipherJP];
+//codeEN=["B","D","F","G","H","J","L","M","&spades;","&hearts;","&diams;","&clubs;","#","N","Q","R","S","T","W","Y","!","&#9679;","&#9650;","&#9632;","+","&ndash;","b","d","f","g","h","j","m","$","&lowast;","/",":","~","n","q","r","s","t","w","y","?","%","&amp;","(","=",")","2","3","4","5","6","7","8","9","&#11014;","&#11015;","&#11013;","&#10145;","@"];
+codeEN="BDFGHJLM♠♥♦♣#NQRSTWY!●▲■+–bdfghjm$∗/:~nqrstwy?%&(=)23456789⬆⬇⬅➡@".split("");
+codeJP="えかく０けつ１しにねそぺ２たせいてみほすうおらの３ふさざきひわやこはゆよへるなと５６７をぷもめりちまあんぞれ８ごどむぴ９４ぼがだ".split("");
+code=[codeEN,codeJP];
+secretID=[[0,4,5,7,9,1,8,2,3,6],[0,4,2,7,9,1,8,5,3,6]]; // determines secret
+description=[[["ClockShop","Smith","Pirate","Deku","Ruul","Graveyard","Biggoron","Subrosian","Diver","Temple"],["とけいやウラ","ウーラコクホウ","かいぞく","デクナッツ","ルール村ちょう","ギーニ","ダイゴロン","ウーラ","すもぐりめいじん","大ようせい"]],[["K Zora","Library","Troy","Tingle","Symmetry","Fairy","Elder","Tokay","Plen","Mamamu"],["キングゾーラ","としょかん","トロイ","チンクル","シメトリ村","ヤンチャようせい","ゴロンちょうろう","トカゲ人","プレンちょうちょう","ママム・ヤン"]]];
+alphaEN="»»»»»»»»»»»»»»»»»♣♦♠»»»»»»»»»»»» !»»»»»'()»»,-.»»»»»»»»»»»:;»=»»»ABCDEFGHIJKLMNOPQRSTUVWXYZ»»»»·»abcdefghijklmnopqrstuvwxyz»»»»»ÀÂÄÆÇÈÉÊËÎÏÑÖŒÙÛÜ»»»»»»»»»»»»»»»àâäæçèéêëîïñöœùûü»»»»»»»»»»»»♥»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»";
+alphaJP="»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»　»»»»»»»»»»»»ー»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんぁぃぅぇぉっゃゅょがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽアイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンァィゥェォッャュョガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポ";
+alpha=[new Array(256),new Array(256)];
+for(i=0;i<256;i++){
+ alpha[0][i]=(alphaEN[i]=="»"?"["+i.toString(16).toUpperCase().padStart(4,"0x0")+"]":alphaEN[i]);
+ alpha[1][i]=(alphaJP[i]=="»"?"["+i.toString(16).toUpperCase().padStart(4,"0x0")+"]":alphaJP[i]);
+}
+function createPasswordOptions(){
+ codeTMP=(lang==0?codeEN.slice():codeJP.slice());
+ codeSort=(lang==0?codeEN.slice().sort():codeJP.slice().sort());
+ for(i=1;i<=20;i++){
+  sel=eval("document.getElementById(\"in"+i+"\")");
+  while(sel.length>0){sel.remove(0);}
+  opt=document.createElement("option");
+  opt.text=" ";
+  opt.value=-1;
+  sel.add(opt);
+  for(j=0;j<64;j++){
+   opt=document.createElement("option");
+   opt.text=codeSort[j];
+   opt.value=codeTMP.indexOf(codeSort[j]);
+   sel.add(opt);
+  }
+ }
+}
+function setLang(l){ // 0 = eur/us, 1 = jp
+ if(l==0){
+  document.getElementById("langEN").className="chosen";
+  document.getElementById("langJP").className="";
+  lang=0;
+  document.getElementById("player_name").value="";
+  document.getElementById("child").value="";
+  createPasswordOptions();
+ }else if(l==1){
+  document.getElementById("langEN").className="";
+  document.getElementById("langJP").className="chosen";
+  lang=1;
+  document.getElementById("player_name").value="";
+  document.getElementById("child").value="";
+  createPasswordOptions();
+ }
+ generateCodes();
+ generateData();
+}
+function toggleRings(){
+ if(document.getElementById("toggle_rings").value=="Select all"){
+  toggle=true;
+  document.getElementById("toggle_rings").value="Select none";
+ }else{
+  toggle=false;
+  document.getElementById("toggle_rings").value="Select all";
+ }
+ for(i=0;i<64;i++){
+  document.getElementById("ring"+i).checked=toggle;
+ }
+ generateCodes();
+}
+function generateCodes(){
+ try{
+ printPW();
+ document.getElementById("error").innerHTML="";
+ }catch(e){
+  document.getElementById("pw").innerHTML="<table class=\"z\"><tr><th>I AM ERROR</th></tr></table>";
+  document.getElementById("error").innerHTML=e;
+ }
+ printRing();
+ printMem();
+}
+function printPW(){
+ out=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+ id=parseInt(document.getElementById("idnr").value)%32768;
+ type=0; //game=0, ring=1
+ hero=(document.getElementById("hero").checked)?1:0;
+ linked=(document.getElementById("linked").checked)?1:0;
+ oracle=(document.getElementById("oracle").value=="seasons")?1:0;
+ player_name=document.getElementById("player_name").value.split("",5);
+ for(i=0;i<5;i++){
+  player_name[i]=(player_name[i]==undefined)?0:alpha[lang].indexOf(player_name[i]);
+  if(player_name[i]==-1){throw "Name not valid. Valid characters:<br>"+(lang==0?alphaEN.replace(/»/g,""):alphaJP.replace(/»/g,""));}
+ }
+ child=document.getElementById("child").value.split("",5);
+ for(i=0;i<5;i++){
+  child[i]=(child[i]==undefined)?0:alpha[lang].indexOf(child[i]);
+  if(child[i]==-1){throw "Child name not valid. Valid characters:<br>"+(lang==0?alphaEN.replace(/»/g,""):alphaJP.replace(/»/g,""));}
+ }
+ childtype=parseInt(document.getElementById("childtype").value)%16;
+ animal=parseInt(document.getElementById("animal").value)%8;
+ bit1_4=0; // (password/ring=0, memory=1)
+ bit10_5=(document.getElementById("bit10_5").checked)?1:0;
+ bit10_6=(document.getElementById("bit10_6").checked)?1:0;
+ bit13_5=(document.getElementById("bit13_5").checked)?1:0;
+ bit15_5=(document.getElementById("bit15_5").checked)?1:0;
+ bit20_1=(document.getElementById("bit20_1").checked)?1:0;
+ bit20_2=(document.getElementById("bit20_2").checked)?1:0; 
+ 
+ cipherstart=((id>>8)+id)%8;
+ cipherstart=((cipherstart&1)<<2)|(cipherstart&2)|((cipherstart&4)>>2);
+ out[0]=(cipherstart<<3)|(bit1_4<<2)|(type<<1)|(id&1);
+ //out[0]=((cipherstart&1)<<5)|((cipherstart&2)<<3)|((cipherstart&4)<<1)|(bit1_4<<2)|(type<<1)|(id&1);
+ out[1]=((id&2)<<4)|((id&4)<<2)|(id&8)|((id&16)>>2)|((id&32)>>4)|((id&64)>>6);
+ out[2]=((id&128)>>2)|((id&256)>>4)|((id&512)>>6)|((id&1024)>>8)|((id&2048)>>10)|((id&4096)>>12);
+ out[3]=((id&8192)>>8)|((id&16384)>>10)|(hero<<3)|(oracle<<2)|((player_name[0]&1)<<1)|((player_name[0]&2)>>1);
+ out[4]=((player_name[0]&4)<<3)|((player_name[0]&8)<<1)|((player_name[0]&16)>>1)|((player_name[0]&32)>>3)|((player_name[0]&64)>>5)|((player_name[0]&128)>>7);
+ out[5]=((child[0]&1)<<5)|((child[0]&2)<<3)|((child[0]&4)<<1)|((child[0]&8)>>1)|((child[0]&16)>>3)|((child[0]&32)>>5);
+ out[6]=((child[0]&64)>>1)|((child[0]&128)>>3)|((player_name[1]&1)<<3)|((player_name[1]&2)<<1)|((player_name[1]&4)>>1)|((player_name[1]&8)>>3);
+ out[7]=((player_name[1]&16)<<1)|((player_name[1]&32)>>1)|((player_name[1]&64)>>3)|((player_name[1]&128)>>5)|((child[1]&1)<<1)|((child[1]&2)>>1);
+ out[8]=((child[1]&4)<<3)|((child[1]&8)<<1)|((child[1]&16)>>1)|((child[1]&32)>>3)|((child[1]&64)>>5)|((child[1]&128)>>7);
+ out[9]=((childtype&1)<<5)|((childtype&2)<<3)|((childtype&4)<<1)|((childtype&8)>>1)|(bit10_5<<1)|(bit10_6);
+ out[10]=((player_name[2]&1)<<5)|((player_name[2]&2)<<3)|((player_name[2]&4)<<1)|((player_name[2]&8)>>1)|((player_name[2]&16)>>3)|((player_name[2]&32)>>5);
+ out[11]=((player_name[2]&64)>>1)|((player_name[2]&128)>>3)|((child[2]&1)<<3)|((child[2]&2)<<1)|((child[2]&4)>>1)|((child[2]&8)>>3);
+ out[12]=((child[2]&16)<<1)|((child[2]&32)>>1)|((child[2]&64)>>3)|((child[2]&128)>>5)|(bit13_5<<1)|(player_name[3]&1);
+ out[13]=((player_name[3]&2)<<4)|((player_name[3]&4)<<2)|(player_name[3]&8)|((player_name[3]&16)>>2)|((player_name[3]&32)>>4)|((player_name[3]&64)>>6);
+ out[14]=((player_name[3]&128)>>2)|((animal&1)<<4)|((animal&2)<<2)|(animal&4)|(bit15_5<<1)|(player_name[4]&1);
+ out[15]=((player_name[4]&2)<<4)|((player_name[4]&4)<<2)|(player_name[4]&8)|((player_name[4]&16)>>2)|((player_name[4]&32)>>4)|((player_name[4]&64)>>6);
+ out[16]=((player_name[4]&128)>>2)|((child[3]&1)<<4)|((child[3]&2)<<2)|(child[3]&4)|((child[3]&8)>>2)|((child[3]&16)>>4);
+ out[17]=(child[3]&32)|((child[3]&64)>>2)|((child[3]&128)>>4)|(linked<<2)|((child[4]&1)<<1)|((child[4]&2)>>1);
+ out[18]=((child[4]&4)<<3)|((child[4]&8)<<1)|((child[4]&16)>>1)|((child[4]&32)>>3)|((child[4]&64)>>5)|((child[4]&128)>>7);
+ checksum=0;for(i=0;i<19;i++){checksum+=out[i];}
+ out[19]=(bit20_1<<5)|(bit20_2<<4)|(checksum%16);
+
+ out[0]^=cipher[lang][4*cipherstart]%8;
+ for(i=1;i<20;i++){out[i]^=cipher[lang][4*cipherstart+i];}
+ 
+ pw_out="<table class=\"z\"><tr><th colspan=\"11\">Password</th></tr><tr>";
+ for(i=0;i<5;i++){pw_out+="<td>"+code[lang][out[i]]+"</td>"}
+ pw_out+="<td>&nbsp;</td>";
+ for(i=5;i<10;i++){pw_out+="<td>"+code[lang][out[i]]+"</td>"}
+ pw_out+="</tr><tr>";
+ for(i=10;i<15;i++){pw_out+="<td>"+code[lang][out[i]]+"</td>"}
+ pw_out+="<td>&nbsp;</td>";
+ for(i=15;i<20;i++){pw_out+="<td>"+code[lang][out[i]]+"</td>"}
+ pw_out+="</tr></table>";
+ document.getElementById("pw").innerHTML=pw_out;
+}
+function printRing(){
+ out=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+ rings=[0,0,0,0,0,0,0,0];
+ id=parseInt(document.getElementById("idnr").value)%32768;
+ type=1; //game=0, ring=1
+ for(i=0;i<64;i++){
+  rings[Math.floor(i/8)]|=(eval("document.getElementById(\"ring"+i+"\").checked")?1:0)<<(7-(i%8));
+ }
+ bit1_4=0; // (password/ring=0, memory=1)
+ bit15_1=(document.getElementById("bit20_1").checked)?1:0; // checksum byte
+ bit15_2=(document.getElementById("bit20_2").checked)?1:0; // checksum byte
+ 
+ cipherstart=((id>>8)+id)%8;
+ cipherstart=((cipherstart&1)<<2)|(cipherstart&2)|((cipherstart&4)>>2);
+ out[0]=(cipherstart<<3)|(bit1_4<<2)|(type<<1)|(id&1);
+ out[1]=((id&2)<<4)|((id&4)<<2)|(id&8)|((id&16)>>2)|((id&32)>>4)|((id&64)>>6);
+ out[2]=((id&128)>>2)|((id&256)>>4)|((id&512)>>6)|((id&1024)>>8)|((id&2048)>>10)|((id&4096)>>12);
+ out[3]=((id&8192)>>8)|((id&16384)>>10)|(rings[1]>>4);
+ out[4]=((rings[1]%16)<<2)|(rings[5]>>6);
+ out[5]=rings[5]%64;
+ out[6]=rings[7]>>2;
+ out[7]=((rings[7]%4)<<4)|(rings[3]>>4);
+ out[8]=((rings[3]%16)<<2)|(rings[0]>>6);
+ out[9]=rings[0]%64;
+ out[10]=rings[4]>>2;
+ out[11]=((rings[4]%4)<<4)|(rings[2]>>4);
+ out[12]=((rings[2]%16)<<2)|(rings[6]>>6);
+ out[13]=rings[6]%64;
+ checksum=0;for(i=0;i<14;i++){checksum+=out[i];}
+ out[14]=(bit15_1<<5)|(bit15_2<<4)|(checksum%16);
+ 
+ out[0]^=cipher[lang][4*cipherstart]%8;
+ for(i=1;i<15;i++){out[i]^=cipher[lang][4*cipherstart+i];}
+ 
+ pw_out="<table class=\"z\"><tr><th colspan=\"11\">Rings</th></tr><tr>";
+ for(i=0;i<5;i++){pw_out+="<td>"+code[lang][out[i]]+"</td>"}
+ pw_out+="<td>&nbsp;</td>";
+ for(i=5;i<10;i++){pw_out+="<td>"+code[lang][out[i]]+"</td>"}
+ pw_out+="</tr><tr>";
+ for(i=10;i<15;i++){pw_out+="<td>"+code[lang][out[i]]+"</td>"}
+ pw_out+="<td colspan=\"6\"></td>";
+ pw_out+="</tr></table>";
+ document.getElementById("rng").innerHTML=pw_out;
+}
+function printMem(){
+ out=[0,0,0,0,0];
+ id=parseInt(document.getElementById("idnr").value)%32768;
+ oracle=(document.getElementById("oracle").value=="seasons")?1:0;
+ type=1; //memory secret=1 (also ring=1)
+ bit1_4=1; // memory secret = 1 (ring=0 here)
+ // bit5_1 is 0 in the first game and 1 in the linked game
+ bit5_2=oracle^1; // depends on the linked game (ages=1, seasons=0)
+ 
+ pw_out="<table class=\"z\"><tr><th colspan=\"13\">Memory Secrets</th></tr>";
+ pw_out+="<tr><td>&nbsp;</td><td>&nbsp;</td><td colspan=\"5\">"+(oracle==1?"Ages":"Seasons")+"</td><td>&nbsp;</td><td colspan=\"5\">"+(oracle==1?"Seasons":"Ages")+"</td></tr>";
+ for(j=0;j<10;j++){
+  // the secret that is sent back to the first game
+  cipherstart=((id>>8)+id+bit5_2*2+(secretID[oracle][j]%2)*4)%8; // FIXA
+  cipherstart=((cipherstart&1)<<2)|(cipherstart&2)|((cipherstart&4)>>2);
+  bit5_1=0; // first game
+  out[0]=(cipherstart<<3)|(bit1_4<<2)|(type<<1)|(id&1);
+  out[1]=((id&2)<<4)|((id&4)<<2)|(id&8)|((id&16)>>2)|((id&32)>>4)|((id&64)>>6);
+  out[2]=((id&128)>>2)|((id&256)>>4)|((id&512)>>6)|((id&1024)>>8)|((id&2048)>>10)|((id&4096)>>12);
+  out[3]=((id&8192)>>8)|((id&16384)>>10)|((secretID[oracle][j]&1)<<3)|((secretID[oracle][j]&2)<<1)|((secretID[oracle][j]&4)>>1)|((secretID[oracle][j]&8)>>3);
+  checksum=0;for(i=0;i<4;i++){checksum+=out[i];}
+  out[4]=(bit5_1<<5)|(bit5_2<<4)|(checksum%16);
+  // cipher
+  out[0]^=cipher[lang][4*cipherstart]%8;
+  for(i=1;i<5;i++){out[i]^=cipher[lang][4*cipherstart+i];}
+  // output
+  pw_out+="<tr><td class=\"descr\">"+description[oracle][lang][j]+"</td><td>&nbsp;</td>";
+  for(i=0;i<5;i++){pw_out+="<td>"+code[lang][out[i]]+"</td>"}
+  // the secret that is returned to the linked game
+  cipherstart=((id>>8)+id+bit5_2*2+(secretID[oracle][j]%2)*4+1)%8;
+  cipherstart=((cipherstart&1)<<2)|(cipherstart&2)|((cipherstart&4)>>2);
+  bit5_1=1; // linked game
+  out[0]=(cipherstart<<3)|(bit1_4<<2)|(type<<1)|(id&1);
+  out[1]=((id&2)<<4)|((id&4)<<2)|(id&8)|((id&16)>>2)|((id&32)>>4)|((id&64)>>6);
+  out[2]=((id&128)>>2)|((id&256)>>4)|((id&512)>>6)|((id&1024)>>8)|((id&2048)>>10)|((id&4096)>>12);
+  out[3]=((id&8192)>>8)|((id&16384)>>10)|((secretID[oracle][j]&1)<<3)|((secretID[oracle][j]&2)<<1)|((secretID[oracle][j]&4)>>1)|((secretID[oracle][j]&8)>>3);
+  checksum=0;for(i=0;i<4;i++){checksum+=out[i];}
+  out[4]=(bit5_1<<5)|(bit5_2<<4)|(checksum%16);
+  // cipher
+  out[0]^=cipher[lang][4*cipherstart]%8;
+  for(i=1;i<5;i++){out[i]^=cipher[lang][4*cipherstart+i];}
+  // output
+  pw_out+="<td>&nbsp;</td>";
+  for(i=0;i<5;i++){pw_out+="<td>"+code[lang][out[i]]+"</td>"}
+  pw_out+="</tr>"
+//  pw_out+=(j%2==0)?"<td>&nbsp;</td>":((j!=9)?"</tr><tr>":"</tr></table>");
+ }
+ pw_out+="</table>";
+ document.getElementById("mem").innerHTML=pw_out;
+}
+function generateData(){
+ pwRAW=new Array(20);
+ lastFilled=-1;
+ firstEmpty=21;
+ for(i=0;i<20;i++){
+  pwRAW[i]=parseInt(eval("document.getElementById(\"in"+(i+1)+"\").value"));
+  if(pwRAW[i]>=0){lastFilled=i+1;}
+  if(i<firstEmpty&&pwRAW[i]==-1){firstEmpty=i+1;}
+ }
+ if(lastFilled==5&&firstEmpty==6){ // Memory secret
+  out="<p><b>Memory Secret</b></p>";
+  pwCipher=(pwRAW[0]>>3);
+  pwRAW[0]^=cipher[lang][4*pwCipher]%8; // decode first character
+  for(i=1;i<5;i++){pwRAW[i]^=cipher[lang][4*pwCipher+i];} // decode remaining characters
+  pwID=(pwRAW[0]&1)|((pwRAW[1]&32)>>4)|((pwRAW[1]&16)>>2)|(pwRAW[1]&8)|((pwRAW[1]&4)<<2)|((pwRAW[1]&2)<<4)|((pwRAW[1]&1)<<6)|((pwRAW[2]&32)<<2)|((pwRAW[2]&16)<<4)|((pwRAW[2]&8)<<6)|((pwRAW[2]&4)<<8)|((pwRAW[2]&2)<<10)|((pwRAW[2]&1)<<12)|((pwRAW[3]&32)<<8)|((pwRAW[3]&16)<<10);
+  pwSecret=((pwRAW[3]&8)>>3)|((pwRAW[3]&4)>>1)|((pwRAW[3]&2)<<1)|((pwRAW[3]&1)<<3);
+  pwChecksum=pwRAW[4]%16;
+  
+  out+="ID: "+pwID+"<br>\n";
+  out+="Secret: "+pwSecret+" ("+(pwSecret<10?description[1-(pwRAW[4]>>4)%2][lang][secretID[1-(pwRAW[4]>>4)%2].indexOf(pwSecret)]:"Invalid")+")<br>\n"; // secret number
+  out+="Used in "+((pwRAW[4]>>5)%2==1?"linked":"non-linked")+" "+(((pwRAW[4]>>5)%2+(pwRAW[4]>>4)%2)%2==1?"Seasons":"Ages")+"<br>\n";
+  // Check for errors
+  checksum=0;for(i=0;i<4;i++){checksum+=pwRAW[i];}checksum%=16;
+  if(pwChecksum!=checksum){
+   out+="ERROR: Checksum is "+pwChecksum+", should be "+checksum+"<br>\n";
+  }
+  if((pwRAW[0]>>2)%2!=1){
+   out+="ERROR: Bit 1<sub>4</sub> is 0, should be 1 (0=game/ring, 1=memory)<br>\n";
+  }
+  if((pwRAW[0]>>1)%2!=1){
+   out+="ERROR: Bit 1<sub>5</sub> is 0, should be 1 (0=game, 1=ring/memory)<br>\n";
+  }
+  cipherstart=((pwID>>8)+pwID+((pwRAW[4]>>4)%2)*2+(pwSecret%2)*4+(pwRAW[4]>>5)%2)%8;
+  cipherstart=((cipherstart&1)<<2)|(cipherstart&2)|((cipherstart&4)>>2);
+  if(pwCipher!=cipherstart){
+   out+="WARNING: Cipher pattern is "+pwCipher+", should be "+cipherstart+"<br>\n";
+  }
+ }else if(lastFilled==15&&firstEmpty==16){ // Ring secret
+  out="<p><b>Ring Secret</b></p>";
+  pwCipher=(pwRAW[0]>>3);
+  pwRAW[0]^=cipher[lang][4*pwCipher]%8; // decode first character
+  for(i=1;i<15;i++){pwRAW[i]^=cipher[lang][4*pwCipher+i];} // decode remaining characters
+  pwID=(pwRAW[0]&1)|((pwRAW[1]&32)>>4)|((pwRAW[1]&16)>>2)|(pwRAW[1]&8)|((pwRAW[1]&4)<<2)|((pwRAW[1]&2)<<4)|((pwRAW[1]&1)<<6)|((pwRAW[2]&32)<<2)|((pwRAW[2]&16)<<4)|((pwRAW[2]&8)<<6)|((pwRAW[2]&4)<<8)|((pwRAW[2]&2)<<10)|((pwRAW[2]&1)<<12)|((pwRAW[3]&32)<<8)|((pwRAW[3]&16)<<10);
+  pwChecksum=pwRAW[14]%16;
+  pwRing=new Array(8); // each byte contains 8 rings (binary left to right)
+  pwRing[0]=((pwRAW[8]&3)<<6)|pwRAW[9]; // ring 1-8
+  pwRing[1]=((pwRAW[3]&15)<<4)|((pwRAW[4]&60)>>2); // ring 9-16
+  pwRing[2]=((pwRAW[11]&15)<<4)|((pwRAW[12]&60)>>2); // ring 17-24
+  pwRing[3]=((pwRAW[7]&15)<<4)|((pwRAW[8]&60)>>2); // ring 25-32
+  pwRing[4]=(pwRAW[10]<<2)|((pwRAW[11]&48)>>4); // ring 33-40
+  pwRing[5]=((pwRAW[4]&3)<<6)|pwRAW[5]; // ring 41-48
+  pwRing[6]=((pwRAW[12]&3)<<6)|pwRAW[13]; // ring 49-56
+  pwRing[7]=(pwRAW[6]<<2)|((pwRAW[7]&48)>>4); //ring 57-64
+  
+  out+="ID: "+pwID+"<br>\n";
+  out+="Rings:<br>\n";
+  for(i=0;i<64;i++){
+   out+="<input type=\"checkbox\" "+(((pwRing[Math.floor(i/8)]>>(7-(i%8)))%2==1)?"checked=\"checked\"":"")+" disabled>";
+   if(i%8==7){out+="<br>\n";}
+  }
+  // Check for errors
+  checksum=0;for(i=0;i<14;i++){checksum+=pwRAW[i];}checksum%=16;
+  if(pwChecksum!=checksum){
+   out+="ERROR: Checksum is "+pwChecksum+", should be "+checksum+"<br>\n";
+  }
+  if((pwRAW[0]>>2)%2!=0){
+   out+="ERROR: Bit 1<sub>4</sub> is 1, should be 0 (0=game/ring, 1=memory)<br>\n";
+  }
+  if((pwRAW[0]>>1)%2!=1){
+   out+="ERROR: Bit 1<sub>5</sub> is 0, should be 1 (0=game, 1=ring/memory)<br>\n";
+  }
+  cipherstart=((pwID>>8)+pwID)%8;
+  cipherstart=((cipherstart&1)<<2)|(cipherstart&2)|((cipherstart&4)>>2);
+  if(pwCipher!=cipherstart){
+   out+="WARNING: Cipher pattern is "+pwCipher+", should be "+cipherstart+"<br>\n";
+  }
+  if((pwRAW[14]>>5)%2!=0){
+   out+="WARNING: Bit 15<sub>1</sub> is 1, should be 0 (only used in memory secrets)<br>\n";
+  }
+  if((pwRAW[14]>>4)%2!=0){
+   out+="WARNING: Bit 15<sub>2</sub> is 1, should be 0 (only used in memory secrets)<br>\n";
+  }
+ }else if(lastFilled==20&&firstEmpty==21){ // Continuation password
+  out="<p><b>Password</b></p>";
+  pwCipher=(pwRAW[0]>>3);
+  pwRAW[0]^=cipher[lang][4*pwCipher]%8; // decode first character
+  for(i=1;i<20;i++){pwRAW[i]^=cipher[lang][4*pwCipher+i];} // decode remaining characters
+  pwID=(pwRAW[0]&1)|((pwRAW[1]&32)>>4)|((pwRAW[1]&16)>>2)|(pwRAW[1]&8)|((pwRAW[1]&4)<<2)|((pwRAW[1]&2)<<4)|((pwRAW[1]&1)<<6)|((pwRAW[2]&32)<<2)|((pwRAW[2]&16)<<4)|((pwRAW[2]&8)<<6)|((pwRAW[2]&4)<<8)|((pwRAW[2]&2)<<10)|((pwRAW[2]&1)<<12)|((pwRAW[3]&32)<<8)|((pwRAW[3]&16)<<10);
+  pwChecksum=pwRAW[19]%16;
+  pwChildType=((pwRAW[9]&4)<<1)|((pwRAW[9]&8)>>1)|((pwRAW[9]&16)>>3)|((pwRAW[9]&32)>>5);
+  if(pwChildType==0){
+   pwChildType="Infant";
+  }else{
+   pwChildType=["Bouncy","Shy","Hyper"][Math.floor((pwChildType-1)/5)]+" "+["E","A","B","C","D"][pwChildType%5];
+  }
+  pwAnimal=(pwRAW[14]&4)|((pwRAW[14]&8)>>2)|((pwRAW[14]&16)>>4);
+  if(pwAnimal>2&&pwAnimal<6){
+   pwAnimal=["Ricky","Dimitri","Moosh"][pwAnimal%3];
+  }else{
+   pwAnimal+=" - ???";
+  }
+  pwName=[-1,-1,-1,-1,-1]; // player name
+  pwName[0]=alpha[lang][((pwRAW[4]&1)<<7)|((pwRAW[4]&2)<<5)|((pwRAW[4]&4)<<3)|((pwRAW[4]&8)<<1)|((pwRAW[4]&16)>>1)|((pwRAW[4]&32)>>3)|((pwRAW[3]&1)<<1)|((pwRAW[3]&2)>>1)];
+  pwName[1]=alpha[lang][((pwRAW[7]&4)<<5)|((pwRAW[7]&8)<<3)|((pwRAW[7]&16)<<1)|((pwRAW[7]&32)>>1)|((pwRAW[6]&1)<<3)|((pwRAW[6]&2)<<1)|((pwRAW[6]&4)>>1)|((pwRAW[6]&8)>>3)];
+  pwName[2]=alpha[lang][((pwRAW[11]&16)<<3)|((pwRAW[11]&32)<<1)|((pwRAW[10]&1)<<5)|((pwRAW[10]&2)<<3)|((pwRAW[10]&4)<<1)|((pwRAW[10]&8)>>1)|((pwRAW[10]&16)>>3)|((pwRAW[10]&32)>>5)];
+  pwName[3]=alpha[lang][((pwRAW[14]&32)<<2)|((pwRAW[13]&1)<<6)|((pwRAW[13]&2)<<4)|((pwRAW[13]&4)<<2)|(pwRAW[13]&8)|((pwRAW[13]&16)>>2)|((pwRAW[13]&32)>>4)|(pwRAW[12]&1)];
+  pwName[4]=alpha[lang][((pwRAW[16]&32)<<2)|((pwRAW[15]&1)<<6)|((pwRAW[15]&2)<<4)|((pwRAW[15]&4)<<2)|(pwRAW[15]&8)|((pwRAW[15]&16)>>2)|((pwRAW[15]&32)>>4)|(pwRAW[14]&1)];
+  pwName=pwName.join("");
+  while(pwName.includes("[0x00]")&&pwName.lastIndexOf("[0x00]")==pwName.length-6){pwName=pwName.substring(0,pwName.length-6);} // remove trailing zeros
+
+  pwChildName=[-1,-1,-1,-1,-1]; // child name
+  pwChildName[0]=alpha[lang][((pwRAW[6]&16)<<3)|((pwRAW[6]&32)<<1)|((pwRAW[5]&1)<<5)|((pwRAW[5]&2)<<3)|((pwRAW[5]&4)<<1)|((pwRAW[5]&8)>>1)|((pwRAW[5]&16)>>3)|((pwRAW[5]&32)>>5)];
+  pwChildName[1]=alpha[lang][((pwRAW[8]&1)<<7)|((pwRAW[8]&2)<<5)|((pwRAW[8]&4)<<3)|((pwRAW[8]&8)<<1)|((pwRAW[8]&16)>>1)|((pwRAW[8]&32)>>3)|((pwRAW[7]&1)<<1)|((pwRAW[7]&2)>>1)];
+  pwChildName[2]=alpha[lang][((pwRAW[12]&4)<<5)|((pwRAW[12]&8)<<3)|((pwRAW[12]&16)<<1)|((pwRAW[12]&32)>>1)|((pwRAW[11]&1)<<3)|((pwRAW[11]&2)<<1)|((pwRAW[11]&4)>>1)|((pwRAW[11]&8)>>3)];
+  pwChildName[3]=alpha[lang][((pwRAW[17]&8)<<4)|((pwRAW[17]&16)<<2)|(pwRAW[17]&32)|((pwRAW[16]&1)<<4)|((pwRAW[16]&2)<<2)|(pwRAW[16]&4)|((pwRAW[16]&8)>>2)|((pwRAW[16]&16)>>4)];
+  pwChildName[4]=alpha[lang][((pwRAW[18]&1)<<7)|((pwRAW[18]&2)<<5)|((pwRAW[18]&4)<<3)|((pwRAW[18]&8)<<1)|((pwRAW[18]&16)>>1)|((pwRAW[18]&32)>>3)|((pwRAW[17]&1)<<1)|((pwRAW[17]&2)>>1)];
+  pwChildName=pwChildName.join("");
+  while(pwChildName.includes("[0x00]")&&pwChildName.lastIndexOf("[0x00]")==pwChildName.length-6){pwChildName=pwChildName.substring(0,pwChildName.length-6);} // remove trailing zeros
+  
+  out+="ID: "+pwID+"<br>\n";
+  out+=((pwRAW[3]>>3)%2==1?"Hero ":((pwRAW[17]>>2)%2==1?"":"Normal "))+((pwRAW[17]>>2)%2==1?"Linked ":"")+((pwRAW[3]>>2)%2==1?"Seasons":"Ages")+"<br>\n";
+  out+="Name: "+pwName+"<br>\n"; // hero name
+  out+="Child name: "+pwChildName+"<br>\n";
+  out+="Child type: "+pwChildType+"<br>\n";
+  out+="Animal: "+pwAnimal+"<br>\n";
+  out+=((pwRAW[12]>>1)%2!=1?"Never got":"Got")+" Friendship Ring<br>\n";
+  // Check for errors
+  checksum=0;for(i=0;i<19;i++){checksum+=pwRAW[i];}checksum%=16;
+  if(pwChecksum!=checksum){
+   out+="ERROR: Checksum is "+pwChecksum+", should be "+checksum+"<br>\n";
+  }
+  if((pwRAW[0]>>2)%2!=0){
+   out+="ERROR: Bit 1<sub>4</sub> is 1, should be 0 (0=game/ring, 1=memory)<br>\n";
+  }
+  if((pwRAW[0]>>1)%2!=0){
+   out+="ERROR: Bit 1<sub>5</sub> is 1, should be 0 (0=game, 1=ring/memory)<br>\n";
+  }
+  cipherstart=((pwID>>8)+pwID)%8;
+  cipherstart=((cipherstart&1)<<2)|(cipherstart&2)|((cipherstart&4)>>2);
+  if(pwCipher!=cipherstart){
+   out+="WARNING: Cipher pattern is "+pwCipher+", should be "+cipherstart+"<br>\n";
+  }
+  if((pwRAW[9]>>1)%2!=0){
+   out+="WARNING: Bit 10<sub>5</sub> is 1, should be 0 (unused child bit)<br>\n";
+  }
+  if(pwRAW[9]%2!=0){
+   out+="WARNING: Bit 10<sub>6</sub> is 1, should be 0 (unused child bit)<br>\n";
+  }
+  if((pwRAW[14]>>1)%2!=1){
+   out+="WARNING: Bit 15<sub>5</sub> is 0, should be 1 (extra animal bit)<br>\n";
+  }
+  if((pwRAW[19]>>5)%2!=0){
+   out+="WARNING: Bit 20<sub>1</sub> is 1, should be 0 (only used in memory secrets)<br>\n";
+  }
+  if((pwRAW[19]>>4)%2!=0){
+   out+="WARNING: Bit 20<sub>2</sub> is 1, should be 0 (only used in memory secrets)<br>\n";
+  }
+ }else{
+  out="<p>Please input a password of 5, 15 or 20 characters.</p>";
+ }
+ document.getElementById("pwdata").innerHTML=out;
+}
+</script></head><body onload="setLang(0);">
+<button id="langEN" class="chosen" onclick="setLang(0);">EUR/US &#127468;&#127463;/&#127482;&#127480;</button>
+<button id="langJP" onclick="setLang(1);">JP &#127471;&#127477;</button><br>
+<span class="zColumn">
+ID: <input type="number" id="idnr" value="7098" min="0" max="32767" step="1" onchange="generateCodes();"><br>
+Hero: <input type="checkbox" id="hero" onchange="generateCodes();"><br>
+Linked: <input type="checkbox" id="linked" onchange="generateCodes();"><br>
+Oracle of <select id="oracle" onkeyup="generateCodes();" onchange="generateCodes();"><option value="ages" selected="selected">Ages</option><option value="seasons">Seasons</option></select><br>
+Name: <input type="text" id="player_name" value="" maxlength="5" oninput="generateCodes();"><br>
+Child: <input type="text" id="child" value="" maxlength="5" oninput="generateCodes();"><br>
+Child type: <select id="childtype" onkeyup="generateCodes();" onchange="generateCodes();"><option value="0" selected="selected">Infant</option><option value="1">Bouncy A</option><option value="2">Bouncy B</option><option value="3">Bouncy C</option><option value="4">Bouncy D</option><option value="5">Bouncy E</option><option value="6">Shy A</option><option value="7">Shy B</option><option value="8">Shy C</option><option value="9">Shy D</option><option value="10">Shy E</option><option value="11">Hyper A</option><option value="12">Hyper B</option><option value="13">Hyper C</option><option value="14">Hyper D</option><option value="15">Hyper E</option></select><br>
+Animal: <select id="animal" onkeyup="generateCodes();" onchange="generateCodes();"><option value="0">0 - ???</option><option value="1">1 - ???</option><option value="2">2 - ???</option><option value="3" selected="selected">3 - Ricky</option><option value="4">4 - Dimitri</option><option value="5">5 - Moosh</option><option value="6">6 - ???</option><option value="7">7 - ???</option></select><br>
+Rings: <input id="toggle_rings" type="button" value="Select all" onclick="toggleRings();"><br>
+<script>
+for(i=0;i<64;i++){
+ if(i%8==0&&i>0){document.write("<br>\n");}
+ document.write("<input type=\"checkbox\" id=\"ring"+i+"\" onchange=\"generateCodes();\">");
+}
+</script><br><br>
+Bit 10<sub>5</sub>: <input type="checkbox" id="bit10_5" onchange="generateCodes();">(Unused child bit)<br>
+Bit 10<sub>6</sub>: <input type="checkbox" id="bit10_6" onchange="generateCodes();">(Unused child bit)<br>
+Bit 13<sub>5</sub>: <input type="checkbox" id="bit13_5" onchange="generateCodes();" checked="checked">(Friendship Ring)<br>
+Bit 15<sub>5</sub>: <input type="checkbox" id="bit15_5" onchange="generateCodes();" checked="checked">(Set animal bit)<br>
+Bit 20<sub>1</sub>: <input type="checkbox" id="bit20_1" onchange="generateCodes();">(Unused checksum bit)<br>
+Bit 20<sub>2</sub>: <input type="checkbox" id="bit20_2" onchange="generateCodes();">(Unused checksum bit)
+</span><span class="zColumn">
+<span id="pw"></span><br>
+<span id="rng"></span><br>
+<span id="mem"></span>
+</span><span class="zColumn">
+<table class="z"><tr><th colspan="11">Password input</th></tr>
+<tr><td><select id="in1" onkeyup="generateData();" onchange="generateData();"></select></td>
+<td><select id="in2" onkeyup="generateData();" onchange="generateData();"></select></td>
+<td><select id="in3" onkeyup="generateData();" onchange="generateData();"></select></td>
+<td><select id="in4" onkeyup="generateData();" onchange="generateData();"></select></td>
+<td><select id="in5" onkeyup="generateData();" onchange="generateData();"></select></td>
+<td>&nbsp;&nbsp;</td>
+<td><select id="in6" onkeyup="generateData();" onchange="generateData();"></select></td>
+<td><select id="in7" onkeyup="generateData();" onchange="generateData();"></select></td>
+<td><select id="in8" onkeyup="generateData();" onchange="generateData();"></select></td>
+<td><select id="in9" onkeyup="generateData();" onchange="generateData();"></select></td>
+<td><select id="in10" onkeyup="generateData();" onchange="generateData();"></select></td><tr>
+<tr><td><select id="in11" onkeyup="generateData();" onchange="generateData();"></select></td>
+<td><select id="in12" onkeyup="generateData();" onchange="generateData();"></select></td>
+<td><select id="in13" onkeyup="generateData();" onchange="generateData();"></select></td>
+<td><select id="in14" onkeyup="generateData();" onchange="generateData();"></select></td>
+<td><select id="in15" onkeyup="generateData();" onchange="generateData();"></select></td>
+<td>&nbsp;&nbsp;</td>
+<td><select id="in16" onkeyup="generateData();" onchange="generateData();"></select></td>
+<td><select id="in17" onkeyup="generateData();" onchange="generateData();"></select></td>
+<td><select id="in18" onkeyup="generateData();" onchange="generateData();"></select></td>
+<td><select id="in19" onkeyup="generateData();" onchange="generateData();"></select></td>
+<td><select id="in20" onkeyup="generateData();" onchange="generateData();"></select></td><tr>
+<tr><td colspan="11" id="pwdata"></td></tr>
+</table>
+</span>
+<br><div id="error"></div>
+<a href="zeldafaq.htm">FAQ - Frequently Asked Questions</a>
+</body></html>
