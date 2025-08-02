@@ -1,0 +1,450 @@
+[
+  {
+    "id": 1,
+    "name": "Friendship Ring",
+    "game": "A, S",
+    "effect": "Get from Vasu (no effect)",
+    "image": "src/assets/Rings/FriendshipRing.gif"
+  },
+  {
+    "id": 2,
+    "name": "Power Ring L-1",
+    "game": "A, S",
+    "effect": "Increases Attack by 1, Damage by 2",
+    "image": "src/assets/Rings/PowerRingL1.gif"
+  },
+  {
+    "id": 3,
+    "name": "Power Ring L-2",
+    "game": "A, S",
+    "effect": "Increases Attack by 2, Damage by 2",
+    "image": "src/assets/Rings/PowerRingL2.gif"
+  },
+  {
+    "id": 4,
+    "name": "Power Ring L-3",
+    "game": "S",
+    "effect": "Increases Attack by 3, Damage by 8",
+    "image": "src/assets/Rings/PowerRingL3.gif"
+  },
+  {
+    "id": 5,
+    "name": "Armor Ring L-1",
+    "game": "A",
+    "effect": "Decreases Attack by 1, Damage by 1",
+    "image": "src/assets/Rings/ArmorRingL1.gif"
+  },
+  {
+    "id": 6,
+    "name": "Armor Ring L-2",
+    "game": "S",
+    "effect": "Decreases Attack by 1, Damage by 2",
+    "image": "src/assets/Rings/ArmorRingL2.gif"
+  },
+  {
+    "id": 7,
+    "name": "Armor Ring L-3",
+    "game": "A",
+    "effect": "Decreases Attack by 1, Damage by 3",
+    "image": "src/assets/Rings/ArmorRingL3.gif"
+  },
+  {
+    "id": 8,
+    "name": "Red Ring",
+    "game": "S",
+    "effect": "Increases Attack x 2",
+    "image": "src/assets/Rings/RedRing.gif"
+  },
+  {
+    "id": 9,
+    "name": "Blue Ring",
+    "game": "A",
+    "effect": "Decreases Damage by 1/2",
+    "image": "src/assets/Rings/BlueRing.gif"
+  },
+  {
+    "id": 10,
+    "name": "Green Ring",
+    "game": "A, S",
+    "effect": "Increases Attack by x1.5, Damage by x0.75",
+    "image": "src/assets/Rings/GreenRing.gif"
+  },
+  {
+    "id": 11,
+    "name": "Cursed Ring",
+    "game": "A, S",
+    "effect": "Increases Attack by x0.5, Damage by x2",
+    "image": "src/assets/Rings/CursedRing.gif"
+  },
+  {
+    "id": 12,
+    "name": "Expert's Ring",
+    "game": "A, S",
+    "effect": "Throws a punch",
+    "image": "src/assets/Rings/ExpertsRing.gif"
+  },
+  {
+    "id": 13,
+    "name": "Blast Ring",
+    "game": "S",
+    "effect": "Adds 2 to Bomb Attack",
+    "image": "src/assets/Rings/BlastRing.gif"
+  },
+  {
+    "id": 14,
+    "name": "Rang Ring L-1",
+    "game": "S",
+    "effect": "Adds 2 to Boomerang Attack",
+    "image": "src/assets/Rings/RangRingL1.gif"
+  },
+  {
+    "id": 15,
+    "name": "Ages GBA Ring",
+    "game": "A",
+    "effect": "-",
+    "image": "src/assets/Rings/GBATimeRing.gif"
+  },
+  {
+    "id": 16,
+    "name": "Maple's Ring",
+    "game": "A, S",
+    "effect": "Decreases number of monsters slain in order to cause Maple event",
+    "image": "src/assets/Rings/MaplesRing.gif"
+  },
+  {
+    "id": 17,
+    "name": "Steadfast Ring",
+    "game": "S",
+    "effect": "Decreases kickback from hits",
+    "image": "src/assets/Rings/SteadfastRing.gif"
+  },
+  {
+    "id": 18,
+    "name": "Pegasus Ring",
+    "game": "A",
+    "effect": "Pegasus Seed's longevity increases",
+    "image": "src/assets/Rings/PegasusRing.gif"
+  },
+  {
+    "id": 19,
+    "name": "Toss Ring",
+    "game": "A, S",
+    "effect": "Increases throwing distance",
+    "image": "src/assets/Rings/TossRing.gif"
+  },
+  {
+    "id": 20,
+    "name": "Heart Ring L-1",
+    "game": "A",
+    "effect": "Slowly heals Hearts as you walk",
+    "image": "src/assets/Rings/HeartRingL1.gif"
+  },
+  {
+    "id": 21,
+    "name": "Heart Ring L-2",
+    "game": "A, S",
+    "effect": "Regenerates Hearts",
+    "image": "src/assets/Rings/HeartRingL2.gif"
+  },
+  {
+    "id": 22,
+    "name": "Swimmer's Ring",
+    "game": "A",
+    "effect": "Allows Link to swim faster",
+    "image": "src/assets/Rings/SwimmersRing.gif"
+  },
+  {
+    "id": 23,
+    "name": "Charge Ring",
+    "game": "A, S",
+    "effect": "Decreases spin attack charge time",
+    "image": "src/assets/Rings/ChargeRing.gif"
+  },
+  {
+    "id": 24,
+    "name": "Light Ring L-1",
+    "game": "A",
+    "effect": "Can still shoot Sword shots at -1 Hearts",
+    "image": "src/assets/Rings/LightRingL1.gif"
+  },
+  {
+    "id": 25,
+    "name": "Light Ring L-2",
+    "game": "A",
+    "effect": "Can still shoot Sword shots at -2 Hearts",
+    "image": "src/assets/Rings/LightRingL2.gif"
+  },
+  {
+    "id": 26,
+    "name": "Bomber's Ring",
+    "game": "A",
+    "effect": "Increases number of Bombs set (2)",
+    "image": "src/assets/Rings/BombersRing.gif"
+  },
+  {
+    "id": 27,
+    "name": "Green Luck Ring",
+    "game": "A, S",
+    "effect": "Decreases amount of damage from traps",
+    "image": "src/assets/Rings/GreenLuckRing.gif"
+  },
+  {
+    "id": 28,
+    "name": "Blue Luck Ring",
+    "game": "A, S",
+    "effect": "Decreases amount of damage from beams",
+    "image": "src/assets/Rings/BlueLuckRing.gif"
+  },
+  {
+    "id": 29,
+    "name": "Yellow Luck Ring",
+    "game": "A",
+    "effect": "Decreases amount of damage from falls",
+    "image": "src/assets/Rings/GoldLuckRing.gif"
+  },
+  {
+    "id": 30,
+    "name": "Red Luck Ring",
+    "game": "A, S",
+    "effect": "Decreases amount of damage from spiked floors",
+    "image": "src/assets/Rings/RedLuckRing.gif"
+  },
+  {
+    "id": 31,
+    "name": "Green Holy Ring",
+    "game": "A, S",
+    "effect": "Decreases amount of damage from electricity",
+    "image": "src/assets/Rings/GreenHolyRing.gif"
+  },
+  {
+    "id": 32,
+    "name": "Blue Holy Ring",
+    "game": "A, S",
+    "effect": "Decreases amount of damage from Zora's fire",
+    "image": "src/assets/Rings/BlueHolyRing.gif"
+  },
+  {
+    "id": 33,
+    "name": "Red Holy Ring",
+    "game": "A, S",
+    "effect": "Decreases amount of damage from rocks",
+    "image": "src/assets/Rings/RedHolyRing.gif"
+  },
+  {
+    "id": 34,
+    "name": "Snowshoe Ring",
+    "game": "A",
+    "effect": "Provides traction on ice",
+    "image": "src/assets/Rings/SnowshoeRing.gif"
+  },
+  {
+    "id": 35,
+    "name": "Roc's Ring",
+    "game": "A, S",
+    "effect": "Cracked floors will hold you up",
+    "image": "src/assets/Rings/RocsRing.gif"
+  },
+  {
+    "id": 36,
+    "name": "Quicksand Ring",
+    "game": "A, S",
+    "effect": "Quicksand will not affect you",
+    "image": "src/assets/Rings/QuicksandRing.gif"
+  },
+  {
+    "id": 37,
+    "name": "Red Joy Ring",
+    "game": "A, S",
+    "effect": "Slain monsters drop extra Rupees",
+    "image": "src/assets/Rings/RedJoyRing.gif"
+  },
+  {
+    "id": 38,
+    "name": "Blue Joy Ring",
+    "game": "A, S",
+    "effect": "Slain monsters drop extra Hearts",
+    "image": "src/assets/Rings/BlueJoyRing.gif"
+  },
+  {
+    "id": 39,
+    "name": "Yellow Joy Ring",
+    "game": "A",
+    "effect": "Increases number of Items found",
+    "image": "src/assets/Rings/GoldJoyRing.gif"
+  },
+  {
+    "id": 40,
+    "name": "Green Joy Ring",
+    "game": "S",
+    "effect": "Increases number of Ore Chunks found",
+    "image": "src/assets/Rings/GreenJoyRing.gif"
+  },
+  {
+    "id": 41,
+    "name": "Discovery Ring",
+    "game": "A, S",
+    "effect": "Allows you to locate soft soil",
+    "image": "src/assets/Rings/DiscoveryRing.gif"
+  },
+  {
+    "id": 42,
+    "name": "Rang Ring L-2",
+    "game": "A, S",
+    "effect": "Increases Boomerang Attack +2",
+    "image": "src/assets/Rings/RangRingL2.gif"
+  },
+  {
+    "id": 43,
+    "name": "Octo Ring",
+    "game": "A, S",
+    "effect": "Changes Link into an Octorok",
+    "image": "src/assets/Rings/OctoRing.gif"
+  },
+  {
+    "id": 44,
+    "name": "Moblin Ring",
+    "game": "A, S",
+    "effect": "Changes Link into a Moblin",
+    "image": "src/assets/Rings/MoblinRing.gif"
+  },
+  {
+    "id": 45,
+    "name": "Like Like Ring",
+    "game": "A, S",
+    "effect": "Changes Link into a Like Like",
+    "image": "src/assets/Rings/LikeLikeRing.gif"
+  },
+  {
+    "id": 46,
+    "name": "Subrosian Ring",
+    "game": "S",
+    "effect": "Changes Link into a Subrosian",
+    "image": "src/assets/Rings/SubrosianRing.gif"
+  },
+  {
+    "id": 47,
+    "name": "First Gen Ring",
+    "game": "A, S",
+    "effect": "Changes Link into original NES Link",
+    "image": "src/assets/Rings/FirstGenRing.gif"
+  },
+  {
+    "id": 48,
+    "name": "Spin Ring",
+    "game": "S",
+    "effect": "Spin attack x2",
+    "image": "src/assets/Rings/SpinRing.gif"
+  },
+  {
+    "id": 49,
+    "name": "Flower Ring",
+    "game": "A, S",
+    "effect": "Own Bombs won't hurt you",
+    "image": "src/assets/Rings/BombproofRing.gif"
+  },
+  {
+    "id": 50,
+    "name": "Energy Ring",
+    "game": "A, S",
+    "effect": "Sword will shoot beams instead of spin attack",
+    "image": "src/assets/Rings/EnergyRing.gif"
+  },
+  {
+    "id": 51,
+    "name": "Razor Ring",
+    "game": "A, S",
+    "effect": "Damage=one heart at a time",
+    "image": "src/assets/Rings/DoubleEdgeRing.gif"
+  },
+  {
+    "id": 52,
+    "name": "Seasons GBA Ring",
+    "game": "S",
+    "effect": "-",
+    "image": "src/assets/Rings/GBANatureRing.gif"
+  },
+  {
+    "id": 53,
+    "name": "Slayer's Ring",
+    "game": "A, S",
+    "effect": "Get this when you've slain 1000 monsters",
+    "image": "src/assets/Rings/SlayersRing.gif"
+  },
+  {
+    "id": 54,
+    "name": "Wealth Ring",
+    "game": "A, S",
+    "effect": "Get this when you've collected 10,000 Rupees",
+    "image": "src/assets/Rings/RupeeRing.gif"
+  },
+  {
+    "id": 55,
+    "name": "Victory Ring",
+    "game": "A, S",
+    "effect": "Get this when you've slain Ganon",
+    "image": "src/assets/Rings/VictoryRing.gif"
+  },
+  {
+    "id": 56,
+    "name": "Sign Ring",
+    "game": "S",
+    "effect": "Get this when you've broken 100 signs",
+    "image": "src/assets/Rings/SignRing.gif"
+  },
+  {
+    "id": 57,
+    "name": "100th Ring",
+    "game": "A, S",
+    "effect": "Get this when you've had 100 Rings appraised",
+    "image": "src/assets/Rings/HundredthRing.gif"
+  },
+  {
+    "id": 58,
+    "name": "Whisp Ring",
+    "game": "A, S",
+    "effect": "Whisps don't affect you",
+    "image": "src/assets/Rings/WhispRing.gif"
+  },
+  {
+    "id": 59,
+    "name": "Gasha Ring",
+    "game": "A, S",
+    "effect": "Allows you to grow rare Gasha Seeds",
+    "image": "src/assets/Rings/GashaRing.gif"
+  },
+  {
+    "id": 60,
+    "name": "Peace Ring",
+    "game": "A, S",
+    "effect": "Bombs won't explode in your hands",
+    "image": "src/assets/Rings/PeaceRing.gif"
+  },
+  {
+    "id": 61,
+    "name": "Zora Ring",
+    "game": "A, S",
+    "effect": "Allows you to dive without breathing",
+    "image": "src/assets/Rings/ZoraRing.gif"
+  },
+  {
+    "id": 62,
+    "name": "Fist Ring",
+    "game": "A, S",
+    "effect": "Allows you to throw a punch when nothing is equipped",
+    "image": "src/assets/Rings/FistRing.gif"
+  },
+  {
+    "id": 63,
+    "name": "Whimsical Ring",
+    "game": "A, S",
+    "effect": "Attack=1, but sometimes can slay a monster in one strike",
+    "image": "src/assets/Rings/WhimsicalRing.gif"
+  },
+  {
+    "id": 64,
+    "name": "Protection Ring",
+    "game": "A, S",
+    "effect": "Always take one Heart damage",
+    "image": "src/assets/Rings/ProtectionRing.gif"
+  }
+]

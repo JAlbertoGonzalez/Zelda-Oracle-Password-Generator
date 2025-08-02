@@ -27,6 +27,7 @@ import ReactCountryFlag from "react-country-flag";
 import './App.css';
 
 import { updateProperties } from './zeldaOraclePasswordGenerator';
+import RingsComponent from './RingsComponent';
 
 import nayru from './assets/Nayru.gif';
 import nayru_inactive from './assets/nayru.png';
@@ -611,7 +612,7 @@ class App extends Component<{}, AppState> {
                     </Title>
                     
                     <Grid>
-                        <Grid.Col>
+                        <Grid.Col span={{ base: 12, md: 6 }}>
                             <GameSettings 
                                 state={this.state}
                                 handleChange={this.handleChange}
@@ -619,8 +620,8 @@ class App extends Component<{}, AppState> {
                             />
                         </Grid.Col>
 
-                        <Grid.Col>
-                            {/* Esta sección se puede usar para mostrar información adicional o dejarla vacía */}
+                        <Grid.Col span={{ base: 12, md: 6 }}>
+                            <RingsComponent />
                         </Grid.Col>
                     </Grid>
                     
