@@ -77,7 +77,7 @@ class RingsComponent extends Component<RingsComponentProps, RingsComponentState>
     }
 
     render() {
-        const { currentPage, selectedRings, hoveredRing, isModalOpen, showAll, popoverOpened } = this.state;
+        const { currentPage, selectedRings, isModalOpen, showAll } = this.state;
         const startIndex = showAll ? 0 : currentPage * 16; // Si showAll es true, empezar desde 0
         const ringsToShow = showAll ? 64 : 16; // Mostrar todos los anillos o solo 16
         const currentPageRings = selectedRings.slice(startIndex, startIndex + ringsToShow);
@@ -152,41 +152,59 @@ class RingsComponent extends Component<RingsComponentProps, RingsComponentState>
                                 {currentPageRings.map((isSelected, index) => {
                                     const ringInfo = getRingInfo(index);
                                     return (
-                                        <Box
+                                        <Tooltip
                                             key={index}
-                                            onClick={() => this.toggleRing(index)}
-                                            onMouseEnter={(event) => this.handleRingHover(index, event)}
-                                            onMouseLeave={this.handleRingLeave}
-                                            style={{
-                                                width: '50px',
-                                                height: '50px',
-                                                borderRadius: '8px',
-                                                border: isSelected ? '3px solid #228be6' : '2px solid #e9ecef',
-                                                cursor: 'pointer',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                transition: 'all 0.2s ease',
-                                                opacity: isSelected ? 1 : 0.8,
-                                                transform: isSelected ? 'scale(1.05)' : 'scale(1)',
-                                                backgroundColor: '#fff',
-                                                boxShadow: isSelected ? '0 4px 12px rgba(34, 139, 230, 0.3)' : '0 2px 4px rgba(0,0,0,0.1)',
-                                                overflow: 'hidden',
-                                                position: 'relative'
-                                            }}
+                                            label={
+                                                <Box>
+                                                    <Text size="sm" fw={500} mb="xs">
+                                                        {ringInfo.name}
+                                                    </Text>
+                                                    <Text size="xs" c="gray" mb="xs">
+                                                        Anillo #{startIndex + index + 1}
+                                                    </Text>
+                                                    <Text size="xs">
+                                                        {ringInfo.effect}
+                                                    </Text>
+                                                </Box>
+                                            }
+                                            position="top"
+                                            withArrow
+                                            multiline
+                                            w={220}
                                         >
-                                            {ringInfo.image && (
-                                                <Image
-                                                    src={ringInfo.image}
-                                                    alt={ringInfo.name}
-                                                    style={{
-                                                        width: '32px',
-                                                        height: '32px',
-                                                        objectFit: 'contain'
-                                                    }}
-                                                />
-                                            )}
-                                        </Box>
+                                            <Box
+                                                onClick={() => this.toggleRing(index)}
+                                                style={{
+                                                    width: '50px',
+                                                    height: '50px',
+                                                    borderRadius: '8px',
+                                                    border: isSelected ? '3px solid #228be6' : '2px solid #e9ecef',
+                                                    cursor: 'pointer',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    transition: 'all 0.2s ease',
+                                                    opacity: isSelected ? 1 : 0.8,
+                                                    transform: isSelected ? 'scale(1.05)' : 'scale(1)',
+                                                    backgroundColor: '#fff',
+                                                    boxShadow: isSelected ? '0 4px 12px rgba(34, 139, 230, 0.3)' : '0 2px 4px rgba(0,0,0,0.1)',
+                                                    overflow: 'hidden',
+                                                    position: 'relative'
+                                                }}
+                                            >
+                                                {ringInfo.image && (
+                                                    <Image
+                                                        src={ringInfo.image}
+                                                        alt={ringInfo.name}
+                                                        style={{
+                                                            width: '32px',
+                                                            height: '32px',
+                                                            objectFit: 'contain'
+                                                        }}
+                                                    />
+                                                )}
+                                            </Box>
+                                        </Tooltip>
                                     );
                                 })}
                             </Box>
@@ -218,43 +236,61 @@ class RingsComponent extends Component<RingsComponentProps, RingsComponentState>
                             {currentPageRings.map((isSelected, index) => {
                                 const ringInfo = getRingInfo(index);
                                 return (
-                                    <Box
+                                    <Tooltip
                                         key={index}
-                                        onClick={() => this.toggleRing(index)}
-                                        onMouseEnter={(event) => this.handleRingHover(index, event)}
-                                        onMouseLeave={this.handleRingLeave}
-                                        style={{
-                                            width: '100%',
-                                            height: '100%',
-                                            minWidth: '45px',
-                                            minHeight: '45px',
-                                            borderRadius: '6px',
-                                            border: isSelected ? '2px solid #228be6' : '1px solid #e9ecef',
-                                            cursor: 'pointer',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            transition: 'all 0.2s ease',
-                                            opacity: isSelected ? 1 : 0.8,
-                                            transform: isSelected ? 'scale(1.02)' : 'scale(1)',
-                                            backgroundColor: '#fff',
-                                            boxShadow: isSelected ? '0 2px 8px rgba(34, 139, 230, 0.3)' : '0 1px 3px rgba(0,0,0,0.1)',
-                                            overflow: 'hidden',
-                                            position: 'relative'
-                                        }}
+                                        label={
+                                            <Box>
+                                                <Text size="sm" fw={500} mb="xs">
+                                                    {ringInfo.name}
+                                                </Text>
+                                                <Text size="xs" c="gray" mb="xs">
+                                                    Anillo #{index + 1}
+                                                </Text>
+                                                <Text size="xs">
+                                                    {ringInfo.effect}
+                                                </Text>
+                                            </Box>
+                                        }
+                                        position="top"
+                                        withArrow
+                                        multiline
+                                        w={220}
                                     >
-                                        {ringInfo.image && (
-                                            <Image
-                                                src={ringInfo.image}
-                                                alt={ringInfo.name}
-                                                style={{
-                                                    width: '28px',
-                                                    height: '28px',
-                                                    objectFit: 'contain'
-                                                }}
-                                            />
-                                        )}
-                                    </Box>
+                                        <Box
+                                            onClick={() => this.toggleRing(index)}
+                                            style={{
+                                                width: '100%',
+                                                height: '100%',
+                                                minWidth: '45px',
+                                                minHeight: '45px',
+                                                borderRadius: '6px',
+                                                border: isSelected ? '2px solid #228be6' : '1px solid #e9ecef',
+                                                cursor: 'pointer',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                transition: 'all 0.2s ease',
+                                                opacity: isSelected ? 1 : 0.8,
+                                                transform: isSelected ? 'scale(1.02)' : 'scale(1)',
+                                                backgroundColor: '#fff',
+                                                boxShadow: isSelected ? '0 2px 8px rgba(34, 139, 230, 0.3)' : '0 1px 3px rgba(0,0,0,0.1)',
+                                                overflow: 'hidden',
+                                                position: 'relative'
+                                            }}
+                                        >
+                                            {ringInfo.image && (
+                                                <Image
+                                                    src={ringInfo.image}
+                                                    alt={ringInfo.name}
+                                                    style={{
+                                                        width: '28px',
+                                                        height: '28px',
+                                                        objectFit: 'contain'
+                                                    }}
+                                                />
+                                            )}
+                                        </Box>
+                                    </Tooltip>
                                 );
                             })}
                         </Box>
@@ -276,42 +312,6 @@ class RingsComponent extends Component<RingsComponentProps, RingsComponentState>
                         Anillos seleccionados: {selectedRings.filter(ring => ring).length} / 64
                     </Text>
                 </Modal>
-
-                {/* Popover para mostrar información del anillo */}
-                {popoverOpened && hoveredRing !== null && (
-                    <Popover
-                        opened={popoverOpened}
-                        position="top"
-                        width={250}
-                        shadow="md"
-                        withArrow
-                        floating
-                    >
-                        <Popover.Target>
-                            <div style={{ 
-                                position: 'absolute',
-                                left: 0,
-                                top: 0,
-                                width: '1px',
-                                height: '1px',
-                                pointerEvents: 'none'
-                            }} />
-                        </Popover.Target>
-                        <Popover.Dropdown>
-                            <Box>
-                                <Text size="sm" fw={500} c="blue" mb="xs">
-                                    {getRingInfo(hoveredRing).name}
-                                </Text>
-                                <Text size="xs" c="gray" mb="xs">
-                                    Anillo #{showAll ? hoveredRing + 1 : startIndex + hoveredRing + 1}
-                                </Text>
-                                <Text size="xs" c="dimmed">
-                                    {getRingInfo(hoveredRing).effect}
-                                </Text>
-                            </Box>
-                        </Popover.Dropdown>
-                    </Popover>
-                )}
             </>
         );
     }
