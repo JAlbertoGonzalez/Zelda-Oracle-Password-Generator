@@ -21,7 +21,9 @@ import {
     IconUser, 
     IconUsers, 
     IconId, 
-    IconMoodKid
+    IconMoodKid,
+    IconChevronDown,
+    IconChevronUp
 } from '@tabler/icons-react';
 import ReactCountryFlag from "react-country-flag";
 import './App.css';
@@ -665,8 +667,9 @@ class Footer extends Component<FooterProps, FooterState> {
                             variant="light" 
                             onClick={this.expandFooter}
                             size="sm"
+                            rightSection={this.state.active ? <IconChevronUp size={16} /> : <IconChevronDown size={16} />}
                         >
-                            {this.state.active ? "Hide Memory Secrets ▲" : "Show Memory Secrets ▼"}
+                            {this.state.active ? "Hide Memory Secrets" : "Show Memory Secrets"}
                         </Button>
                     </Group>
                     

@@ -6,7 +6,8 @@ import {
     Modal,
     Paper,
     Text,
-    Title
+    Title,
+    Tooltip
 } from '@mantine/core';
 import { 
     IconChevronLeft, 
@@ -22,10 +23,9 @@ interface RingsComponentProps {
 
 interface RingsComponentState {
     currentPage: number;
-    selectedRings: boolean[]; // Array of 64 rings (8x2x4)
-    hoveredRing: number | null; // Índice del anillo sobre el que está el ratón
-    isModalOpen: boolean; // Estado de la modal
-    showAll: boolean; // Estado para mostrar todos los anillos
+    selectedRings: boolean[];
+    isModalOpen: boolean;
+    showAll: boolean;
 }
 
 class RingsComponent extends Component<RingsComponentProps, RingsComponentState> {
@@ -33,10 +33,9 @@ class RingsComponent extends Component<RingsComponentProps, RingsComponentState>
         super(props);
         this.state = {
             currentPage: 0,
-            selectedRings: new Array(64).fill(false), // 64 anillos en total (8x2x4)
-            hoveredRing: null, // Ningún anillo tiene hover inicialmente
-            isModalOpen: false, // Modal cerrada por defecto
-            showAll: false // Vista paginada por defecto
+            selectedRings: Array(64).fill(false),
+            isModalOpen: false,
+            showAll: false
         };
     }
 
@@ -55,19 +54,11 @@ class RingsComponent extends Component<RingsComponentProps, RingsComponentState>
         // Navegación infinita: si va más allá de los límites, vuelve al otro extremo
         let targetPage = page;
         if (page < 0) {
-            targetPage = 3; // Ir a la última página
+            targetPage = 3; // Ir a la última caja
         } else if (page > 3) {
-            targetPage = 0; // Ir a la primera página
+            targetPage = 0; // Ir a la primera caja
         }
-        this.setState({ currentPage: targetPage, hoveredRing: null });
-    }
-
-    handleRingHover = (ringIndex: number) => {
-        this.setState({ hoveredRing: ringIndex });
-    }
-
-    handleRingLeave = () => {
-        this.setState({ hoveredRing: null });
+        this.setState({ currentPage: targetPage });
     }
 
     openModal = () => {
@@ -75,19 +66,18 @@ class RingsComponent extends Component<RingsComponentProps, RingsComponentState>
     }
 
     closeModal = () => {
-        this.setState({ isModalOpen: false, hoveredRing: null });
+        this.setState({ isModalOpen: false });
     }
 
     toggleShowAll = () => {
         this.setState(prevState => ({ 
             showAll: !prevState.showAll,
-            currentPage: 0, // Resetear a primera página cuando se cambie el modo
-            hoveredRing: null 
+            currentPage: 0 // Resetear a primera caja cuando se cambie el modo
         }));
     }
 
     render() {
-        const { currentPage, selectedRings, hoveredRing, isModalOpen, showAll } = this.state;
+        const { currentPage, selectedRings, hoveredRing, isModalOpen, showAll, popoverOpened } = this.state;
         const startIndex = showAll ? 0 : currentPage * 16; // Si showAll es true, empezar desde 0
         const ringsToShow = showAll ? 64 : 16; // Mostrar todos los anillos o solo 16
         const currentPageRings = selectedRings.slice(startIndex, startIndex + ringsToShow);
@@ -124,11 +114,11 @@ class RingsComponent extends Component<RingsComponentProps, RingsComponentState>
                     size={showAll ? "95%" : "xl"}
                     centered
                 >
-                    {/* Número de página arriba (solo en modo paginado) */}
+                    {/* Número de caja arriba (solo en modo paginado) */}
                     {!showAll && (
                         <Group justify="center" mb="md">
                             <Text size="lg" fw={500} c="blue">
-                                Página {currentPage + 1}/4
+                                Caja {currentPage + 1}/4
                             </Text>
                         </Group>
                     )}
@@ -165,7 +155,7 @@ class RingsComponent extends Component<RingsComponentProps, RingsComponentState>
                                         <Box
                                             key={index}
                                             onClick={() => this.toggleRing(index)}
-                                            onMouseEnter={() => this.handleRingHover(index)}
+                                            onMouseEnter={(event) => this.handleRingHover(index, event)}
                                             onMouseLeave={this.handleRingLeave}
                                             style={{
                                                 width: '50px',
@@ -231,7 +221,7 @@ class RingsComponent extends Component<RingsComponentProps, RingsComponentState>
                                     <Box
                                         key={index}
                                         onClick={() => this.toggleRing(index)}
-                                        onMouseEnter={() => this.handleRingHover(index)}
+                                        onMouseEnter={(event) => this.handleRingHover(index, event)}
                                         onMouseLeave={this.handleRingLeave}
                                         style={{
                                             width: '100%',
@@ -270,42 +260,6 @@ class RingsComponent extends Component<RingsComponentProps, RingsComponentState>
                         </Box>
                     )}
 
-                    {/* Mostrar información del anillo */}
-                    <Box style={{ 
-                        marginTop: '16px', 
-                        minHeight: '80px',
-                        maxHeight: '80px',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        overflow: 'hidden'
-                    }}>
-                        {hoveredRing !== null && (
-                            <>
-                                <Text ta="center" size="sm" fw={500} c="blue" style={{
-                                    whiteSpace: 'nowrap',
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis'
-                                }}>
-                                    {getRingInfo(hoveredRing).name}
-                                </Text>
-                                <Text ta="center" size="xs" c="gray" style={{ marginTop: '4px' }}>
-                                    Anillo #{showAll ? hoveredRing + 1 : startIndex + hoveredRing + 1}
-                                </Text>
-                                <Text ta="center" size="xs" c="dimmed" style={{ 
-                                    marginTop: '4px',
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    display: '-webkit-box',
-                                    WebkitLineClamp: 2,
-                                    WebkitBoxOrient: 'vertical'
-                                }}>
-                                    {getRingInfo(hoveredRing).effect}
-                                </Text>
-                            </>
-                        )}
-                    </Box>
-
                     {/* Botón Ver Todos debajo de la caja de anillos */}
                     <Group justify="center" mt="md">
                         <Button
@@ -313,7 +267,7 @@ class RingsComponent extends Component<RingsComponentProps, RingsComponentState>
                             size="sm"
                             onClick={this.toggleShowAll}
                         >
-                            {showAll ? "Modo Páginas" : "Ver Todos"}
+                            {showAll ? "Modo Cajas" : "Ver Todos"}
                         </Button>
                     </Group>
 
@@ -322,6 +276,42 @@ class RingsComponent extends Component<RingsComponentProps, RingsComponentState>
                         Anillos seleccionados: {selectedRings.filter(ring => ring).length} / 64
                     </Text>
                 </Modal>
+
+                {/* Popover para mostrar información del anillo */}
+                {popoverOpened && hoveredRing !== null && (
+                    <Popover
+                        opened={popoverOpened}
+                        position="top"
+                        width={250}
+                        shadow="md"
+                        withArrow
+                        floating
+                    >
+                        <Popover.Target>
+                            <div style={{ 
+                                position: 'absolute',
+                                left: 0,
+                                top: 0,
+                                width: '1px',
+                                height: '1px',
+                                pointerEvents: 'none'
+                            }} />
+                        </Popover.Target>
+                        <Popover.Dropdown>
+                            <Box>
+                                <Text size="sm" fw={500} c="blue" mb="xs">
+                                    {getRingInfo(hoveredRing).name}
+                                </Text>
+                                <Text size="xs" c="gray" mb="xs">
+                                    Anillo #{showAll ? hoveredRing + 1 : startIndex + hoveredRing + 1}
+                                </Text>
+                                <Text size="xs" c="dimmed">
+                                    {getRingInfo(hoveredRing).effect}
+                                </Text>
+                            </Box>
+                        </Popover.Dropdown>
+                    </Popover>
+                )}
             </>
         );
     }
