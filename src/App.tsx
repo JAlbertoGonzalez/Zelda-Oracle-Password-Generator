@@ -43,9 +43,12 @@ import ricky_inactive from './assets/ricky.png';
 import dimitri from './assets/dimitri.png';
 import dimitri_inactive from './assets/dimitri.png';
 
-interface AppState {
-    mainPassword: string[];
-    memoryPassword: string[];
+interface MemorySecretsProps {
+    password: string;
+    person: string;
+}
+
+interface GameSettingsProps {
     game: string;
     gameID: string;
     heroName: string;
@@ -55,20 +58,14 @@ interface AppState {
     isLinkedGame: boolean;
     isHeroQuest: boolean;
     gameLanguage: string;
-}
-
-interface MemorySecretsProps {
-    password: string;
-    person: string;
-}
-
-interface GameSettingsProps {
-    state: AppState;
     handleChange: (event: any) => void;
     gameIsAges: boolean;
 }
 
-const GameSettings: React.FC<GameSettingsProps> = ({ state, handleChange, gameIsAges }) => {
+const GameSettings: React.FC<GameSettingsProps> = ({ 
+    game, gameID, heroName, childName, animal, behavior, 
+    isLinkedGame, isHeroQuest, gameLanguage, handleChange, gameIsAges 
+}) => {
     return (
         <Paper p="md">
             <Title order={3} mb="md">Game Settings</Title>
@@ -82,7 +79,7 @@ const GameSettings: React.FC<GameSettingsProps> = ({ state, handleChange, gameIs
                 {/* Game Language Row */}
                 <Text size="sm" fw={500}>Game Language</Text>
                 <SegmentedControl
-                    value={state.gameLanguage}
+                    value={gameLanguage}
                     onChange={(value) => handleChange({
                         target: { name: 'gameLanguage', value: value }
                     } as any)}
@@ -99,12 +96,12 @@ const GameSettings: React.FC<GameSettingsProps> = ({ state, handleChange, gameIs
                         height: '32px',
                         borderRadius: '4px',
                         overflow: 'hidden',
-                        border: state.gameLanguage === 'EUR/US' ? '2px solid #228be6' : '2px solid #e9ecef',
+                        border: gameLanguage === 'EUR/US' ? '2px solid #228be6' : '2px solid #e9ecef',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        opacity: state.gameLanguage === 'EUR/US' ? 1 : 0.4,
-                        filter: state.gameLanguage === 'EUR/US' ? 'none' : 'grayscale(100%)',
+                        opacity: gameLanguage === 'EUR/US' ? 1 : 0.4,
+                        filter: gameLanguage === 'EUR/US' ? 'none' : 'grayscale(100%)',
                         flexShrink: 0
                     }}>
                         <ReactCountryFlag 
@@ -122,12 +119,12 @@ const GameSettings: React.FC<GameSettingsProps> = ({ state, handleChange, gameIs
                         height: '32px',
                         borderRadius: '4px',
                         overflow: 'hidden',
-                        border: state.gameLanguage === 'JP' ? '2px solid #228be6' : '2px solid #e9ecef',
+                        border: gameLanguage === 'JP' ? '2px solid #228be6' : '2px solid #e9ecef',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        opacity: state.gameLanguage === 'JP' ? 1 : 0.4,
-                        filter: state.gameLanguage === 'JP' ? 'none' : 'grayscale(100%)',
+                        opacity: gameLanguage === 'JP' ? 1 : 0.4,
+                        filter: gameLanguage === 'JP' ? 'none' : 'grayscale(100%)',
                         flexShrink: 0
                     }}>
                         <ReactCountryFlag 
@@ -145,7 +142,7 @@ const GameSettings: React.FC<GameSettingsProps> = ({ state, handleChange, gameIs
                 {/* Game Title Row */}
                 <Text size="sm" fw={500}>Oracle of...</Text>
                 <SegmentedControl
-                    value={state.game}
+                    value={game}
                     onChange={(value) => handleChange({
                         target: { name: 'game', value: value }
                     } as any)}
@@ -162,17 +159,17 @@ const GameSettings: React.FC<GameSettingsProps> = ({ state, handleChange, gameIs
                         height: '32px',
                         borderRadius: '6px',
                         overflow: 'hidden',
-                        border: state.game === 'Ages' ? '2px solid #228be6' : '2px solid #e9ecef',
+                        border: game === 'Ages' ? '2px solid #228be6' : '2px solid #e9ecef',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        opacity: state.game === 'Ages' ? 1 : 0.4,
-                        filter: state.game === 'Ages' ? 'none' : 'grayscale(100%)',
+                        opacity: game === 'Ages' ? 1 : 0.4,
+                        filter: game === 'Ages' ? 'none' : 'grayscale(100%)',
                         backgroundColor: '#f8f9fa',
                         flexShrink: 0
                     }}>
                         <Image
-                            src={state.game === 'Ages' ? nayru : nayru_inactive}
+                            src={game === 'Ages' ? nayru : nayru_inactive}
                             style={{ 
                                 width: '24px',
                                 height: '24px',
@@ -185,17 +182,17 @@ const GameSettings: React.FC<GameSettingsProps> = ({ state, handleChange, gameIs
                         height: '32px',
                         borderRadius: '6px',
                         overflow: 'hidden',
-                        border: state.game === 'Seasons' ? '2px solid #228be6' : '2px solid #e9ecef',
+                        border: game === 'Seasons' ? '2px solid #228be6' : '2px solid #e9ecef',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        opacity: state.game === 'Seasons' ? 1 : 0.4,
-                        filter: state.game === 'Seasons' ? 'none' : 'grayscale(100%)',
+                        opacity: game === 'Seasons' ? 1 : 0.4,
+                        filter: game === 'Seasons' ? 'none' : 'grayscale(100%)',
                         backgroundColor: '#f8f9fa',
                         flexShrink: 0
                     }}>
                         <Image
-                            src={state.game === 'Seasons' ? din : din_inactive}
+                            src={game === 'Seasons' ? din : din_inactive}
                             style={{ 
                                 width: '24px',
                                 height: '24px',
@@ -209,20 +206,20 @@ const GameSettings: React.FC<GameSettingsProps> = ({ state, handleChange, gameIs
                 <Text size="sm" fw={500}>Game Type</Text>
                 <Group gap="xs">
                     <Button
-                        variant={state.isLinkedGame ? 'filled' : 'outline'}
+                        variant={isLinkedGame ? 'filled' : 'outline'}
                         size="sm"
                         onClick={() => handleChange({
-                            target: { name: 'isLinkedGame', value: !state.isLinkedGame }
+                            target: { name: 'isLinkedGame', value: !isLinkedGame }
                         } as any)}
                         style={{ flex: 1 }}
                     >
                         Linked Game
                     </Button>
                     <Button
-                        variant={state.isHeroQuest ? 'filled' : 'outline'}
+                        variant={isHeroQuest ? 'filled' : 'outline'}
                         size="sm"
                         onClick={() => handleChange({
-                            target: { name: 'isHeroQuest', value: !state.isHeroQuest }
+                            target: { name: 'isHeroQuest', value: !isHeroQuest }
                         } as any)}
                         style={{ flex: 1 }}
                     >
@@ -235,17 +232,17 @@ const GameSettings: React.FC<GameSettingsProps> = ({ state, handleChange, gameIs
                         height: '32px',
                         borderRadius: '6px',
                         overflow: 'hidden',
-                        border: state.isLinkedGame ? '2px solid #228be6' : '2px solid #e9ecef',
+                        border: isLinkedGame ? '2px solid #228be6' : '2px solid #e9ecef',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        opacity: state.isLinkedGame ? 1 : 0.4,
-                        filter: state.isLinkedGame ? 'none' : 'grayscale(100%)',
+                        opacity: isLinkedGame ? 1 : 0.4,
+                        filter: isLinkedGame ? 'none' : 'grayscale(100%)',
                         backgroundColor: '#f8f9fa',
                         flexShrink: 0
                     }}>
                         <Image
-                            src={state.isLinkedGame ? (gameIsAges ? link_ages : link_seasons) : link}
+                            src={isLinkedGame ? (gameIsAges ? link_ages : link_seasons) : link}
                             style={{ 
                                 width: '24px',
                                 height: '24px',
@@ -258,12 +255,12 @@ const GameSettings: React.FC<GameSettingsProps> = ({ state, handleChange, gameIs
                         height: '32px',
                         borderRadius: '6px',
                         overflow: 'hidden',
-                        border: state.isHeroQuest ? '2px solid #228be6' : '2px solid #e9ecef',
+                        border: isHeroQuest ? '2px solid #228be6' : '2px solid #e9ecef',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        opacity: state.isHeroQuest ? 1 : 0.4,
-                        filter: state.isHeroQuest ? 'none' : 'grayscale(100%)',
+                        opacity: isHeroQuest ? 1 : 0.4,
+                        filter: isHeroQuest ? 'none' : 'grayscale(100%)',
                         backgroundColor: '#f8f9fa',
                         flexShrink: 0
                     }}>
@@ -283,7 +280,7 @@ const GameSettings: React.FC<GameSettingsProps> = ({ state, handleChange, gameIs
                 <TextInput
                     placeholder="Enter hero name"
                     maxLength={5}
-                    value={state.heroName}
+                    value={heroName}
                     onChange={(event) => handleChange({
                         target: { name: 'heroName', value: event.currentTarget.value }
                     } as any)}
@@ -297,7 +294,7 @@ const GameSettings: React.FC<GameSettingsProps> = ({ state, handleChange, gameIs
                 <TextInput
                     placeholder="Enter child name"
                     maxLength={5}
-                    value={state.childName}
+                    value={childName}
                     onChange={(event) => handleChange({
                         target: { name: 'childName', value: event.currentTarget.value }
                     } as any)}
@@ -312,7 +309,7 @@ const GameSettings: React.FC<GameSettingsProps> = ({ state, handleChange, gameIs
                     placeholder="Enter game ID"
                     min={0}
                     max={32767}
-                    value={state.gameID !== '' ? parseInt(state.gameID) : undefined}
+                    value={gameID !== '' ? parseInt(gameID) : undefined}
                     onChange={(value) => handleChange({
                         target: { name: 'gameID', value: value?.toString() || '' }
                     } as any)}
@@ -324,7 +321,7 @@ const GameSettings: React.FC<GameSettingsProps> = ({ state, handleChange, gameIs
                 {/* Behavior Row */}
                 <Text size="sm" fw={500}>Behavior</Text>
                 <Select
-                    value={state.behavior}
+                    value={behavior}
                     onChange={(value) => handleChange({
                         target: { name: 'behavior', value: value || 'Infant' }
                     } as any)}
@@ -354,7 +351,7 @@ const GameSettings: React.FC<GameSettingsProps> = ({ state, handleChange, gameIs
                 {/* Animal Friend Row */}
                 <Text size="sm" fw={500}>Animal Friend</Text>
                 <SegmentedControl
-                    value={state.animal}
+                    value={animal}
                     onChange={(value) => handleChange({
                         target: { name: 'animal', value: value }
                     } as any)}
@@ -372,17 +369,17 @@ const GameSettings: React.FC<GameSettingsProps> = ({ state, handleChange, gameIs
                         height: '32px',
                         borderRadius: '6px',
                         overflow: 'hidden',
-                        border: state.animal === 'Ricky' ? '2px solid #228be6' : '2px solid #e9ecef',
+                        border: animal === 'Ricky' ? '2px solid #228be6' : '2px solid #e9ecef',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        opacity: state.animal === 'Ricky' ? 1 : 0.4,
-                        filter: state.animal === 'Ricky' ? 'none' : 'grayscale(100%)',
+                        opacity: animal === 'Ricky' ? 1 : 0.4,
+                        filter: animal === 'Ricky' ? 'none' : 'grayscale(100%)',
                         backgroundColor: '#f8f9fa',
                         flexShrink: 0
                     }}>
                         <Image
-                            src={state.animal === 'Ricky' ? ricky : ricky_inactive}
+                            src={animal === 'Ricky' ? ricky : ricky_inactive}
                             style={{ 
                                 width: '24px',
                                 height: '24px',
@@ -395,17 +392,17 @@ const GameSettings: React.FC<GameSettingsProps> = ({ state, handleChange, gameIs
                         height: '32px',
                         borderRadius: '6px',
                         overflow: 'hidden',
-                        border: state.animal === 'Dimitri' ? '2px solid #228be6' : '2px solid #e9ecef',
+                        border: animal === 'Dimitri' ? '2px solid #228be6' : '2px solid #e9ecef',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        opacity: state.animal === 'Dimitri' ? 1 : 0.4,
-                        filter: state.animal === 'Dimitri' ? 'none' : 'grayscale(100%)',
+                        opacity: animal === 'Dimitri' ? 1 : 0.4,
+                        filter: animal === 'Dimitri' ? 'none' : 'grayscale(100%)',
                         backgroundColor: '#f8f9fa',
                         flexShrink: 0
                     }}>
                         <Image
-                            src={state.animal === 'Dimitri' ? dimitri : dimitri_inactive}
+                            src={animal === 'Dimitri' ? dimitri : dimitri_inactive}
                             style={{ 
                                 width: '24px',
                                 height: '24px',
@@ -418,17 +415,17 @@ const GameSettings: React.FC<GameSettingsProps> = ({ state, handleChange, gameIs
                         height: '32px',
                         borderRadius: '6px',
                         overflow: 'hidden',
-                        border: state.animal === 'Moosh' ? '2px solid #228be6' : '2px solid #e9ecef',
+                        border: animal === 'Moosh' ? '2px solid #228be6' : '2px solid #e9ecef',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        opacity: state.animal === 'Moosh' ? 1 : 0.4,
-                        filter: state.animal === 'Moosh' ? 'none' : 'grayscale(100%)',
+                        opacity: animal === 'Moosh' ? 1 : 0.4,
+                        filter: animal === 'Moosh' ? 'none' : 'grayscale(100%)',
                         backgroundColor: '#f8f9fa',
                         flexShrink: 0
                     }}>
                         <Image
-                            src={state.animal === 'Moosh' ? moosh : moosh_inactive}
+                            src={animal === 'Moosh' ? moosh : moosh_inactive}
                             style={{ 
                                 width: '24px',
                                 height: '24px',
@@ -443,33 +440,32 @@ const GameSettings: React.FC<GameSettingsProps> = ({ state, handleChange, gameIs
 };
 
 const App: React.FC = () => {
-    const [state, setState] = useState<AppState>({
-        mainPassword: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-        memoryPassword: ["", "", "", "", "", "", "", "", "", ""],
-        game: "Ages",
-        gameID: "7098",
-        heroName: "Link",
-        childName: "Pip",
-        animal: "Ricky",
-        behavior: "Infant",
-        isLinkedGame: false,
-        isHeroQuest: false,
-        gameLanguage: "EUR/US"
-    });
+    // Individual state hooks for each piece of data
+    const [mainPassword, setMainPassword] = useState<string[]>(["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]);
+    const [memoryPassword, setMemoryPassword] = useState<string[]>(["", "", "", "", "", "", "", "", "", ""]);
+    const [game, setGame] = useState<string>("Ages");
+    const [gameID, setGameID] = useState<string>("7098");
+    const [heroName, setHeroName] = useState<string>("Link");
+    const [childName, setChildName] = useState<string>("Pip");
+    const [animal, setAnimal] = useState<string>("Ricky");
+    const [behavior, setBehavior] = useState<string>("Infant");
+    const [isLinkedGame, setIsLinkedGame] = useState<boolean>(false);
+    const [isHeroQuest, setIsHeroQuest] = useState<boolean>(false);
+    const [gameLanguage, setGameLanguage] = useState<string>("EUR/US");
 
     const getPassword = (): string[][] | undefined => {
         let newPassword = updateProperties(
-            state.game,
-            state.gameID,
-            state.heroName,
-            state.childName,
-            state.animal,
-            state.behavior,
-            state.isLinkedGame,
-            state.isHeroQuest
+            game,
+            gameID,
+            heroName,
+            childName,
+            animal,
+            behavior,
+            isLinkedGame,
+            isHeroQuest
         );
 
-        if (state.game && state.gameID) {
+        if (game && gameID) {
             return newPassword;
         }
     };
@@ -483,32 +479,54 @@ const App: React.FC = () => {
 
         let newPassword = passwords[0];
 
-        setState(prevState => ({
-            ...prevState,
-            mainPassword: newPassword,
-            memoryPassword: passwords.slice(1).map(p => p.join(''))
-        }));
+        setMainPassword(newPassword);
+        setMemoryPassword(passwords.slice(1).map(p => p.join('')));
     };
 
     const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement> | { target: { name: string, value: any } }) => {
         let value: string | boolean = event.target.value;
         
         // Handle boolean values for buttons
-        if (event.target.name === 'isLinkedGame' || event.target.name === 'isHeroQuest') {
-            setState(prevState => ({
-                ...prevState,
-                [event.target.name]: event.target.value
-            }));
+        if (event.target.name === 'isLinkedGame') {
+            setIsLinkedGame(event.target.value);
+            return;
+        }
+        
+        if (event.target.name === 'isHeroQuest') {
+            setIsHeroQuest(event.target.value);
             return;
         }
         
         if ((event.target as HTMLInputElement).type === "checkbox") {
             value = (event.target as HTMLInputElement).checked;
         }
-        setState(prevState => ({
-            ...prevState,
-            [event.target.name]: value
-        }));
+        
+        // Handle each field individually
+        switch (event.target.name) {
+            case 'gameLanguage':
+                setGameLanguage(value as string);
+                break;
+            case 'game':
+                setGame(value as string);
+                break;
+            case 'heroName':
+                setHeroName(value as string);
+                break;
+            case 'childName':
+                setChildName(value as string);
+                break;
+            case 'gameID':
+                setGameID(value as string);
+                break;
+            case 'behavior':
+                setBehavior(value as string);
+                break;
+            case 'animal':
+                setAnimal(value as string);
+                break;
+            default:
+                break;
+        }
     };
 
     const formatPassword = (password: string[]): string => {
@@ -548,23 +566,19 @@ const App: React.FC = () => {
         let newPassword = passwords[0];
 
         // Only update if password actually changed
-        const currentPassword = state.mainPassword.join('');
+        const currentPassword = mainPassword.join('');
         const newPasswordString = newPassword.join('');
         
         if (currentPassword !== newPasswordString) {
-            setState(prevState => ({
-                ...prevState,
-                mainPassword: newPassword,
-                memoryPassword: passwords.slice(1).map(p => p.join(''))
-            }));
+            setMainPassword(newPassword);
+            setMemoryPassword(passwords.slice(1).map(p => p.join('')));
         }
-    }, [state.game, state.gameID, state.heroName, state.childName, state.animal, state.behavior, state.isLinkedGame, state.isHeroQuest]);
+    }, [game, gameID, heroName, childName, animal, behavior, isLinkedGame, isHeroQuest]);
 
-    let statePassword = state.mainPassword;
+    let statePassword = mainPassword;
     let htmlPassword = formatPassword(statePassword);
 
-    let gameIsAges = state.game === "Ages";
-    let memoryPassword = state.memoryPassword;
+    let gameIsAges = game === "Ages";
 
     return (
         <Container size="xl">
@@ -577,7 +591,15 @@ const App: React.FC = () => {
                 <Grid.Col span={{ base: 12, lg: 6 }}>
                     <Box style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                         <GameSettings 
-                            state={state}
+                            game={game}
+                            gameID={gameID}
+                            heroName={heroName}
+                            childName={childName}
+                            animal={animal}
+                            behavior={behavior}
+                            isLinkedGame={isLinkedGame}
+                            isHeroQuest={isHeroQuest}
+                            gameLanguage={gameLanguage}
                             handleChange={handleChange}
                             gameIsAges={gameIsAges}
                         />
