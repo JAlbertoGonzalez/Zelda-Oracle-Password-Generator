@@ -1,14 +1,16 @@
 import { useState } from 'react';
 import { 
     Paper, 
-    Title, 
     Tabs, 
     TextInput,
     Button,
     Group,
     Text,
-    Box
+    Box,
+    Grid
 } from '@mantine/core';
+import ZeldaKeyboard from './ZeldaKeyboard';
+import PasswordSymbols from './PasswordSymbols';
 
 interface GeneratedPasswordComponentProps {
     mainPassword: string[];
@@ -28,6 +30,27 @@ const GeneratedPasswordComponent: React.FC<GeneratedPasswordComponentProps> = ({
         setInputPassword(event.currentTarget.value);
     };
 
+    const handleSymbolClick = (symbol: string) => {
+        setInputPassword(prev => prev.length < 20 ? prev + symbol : prev);
+    };
+
+    const clearInputPassword = () => {
+        setInputPassword('');
+    };
+
+    const deleteLastCharacter = () => {
+        setInputPassword(prev => prev.slice(0, -1));
+    };
+
+    const formatPasswordPreview = (password: string): string => {
+        // Convertir la contraseña en 4 grupos de 5 caracteres
+        const groups = [];
+        for (let i = 0; i < password.length; i += 5) {
+            groups.push(password.slice(i, i + 5));
+        }
+        return groups.join(' ');
+    };
+
     const analyzePassword = () => {
         // TODO: Aquí se podría implementar la lógica para analizar el password ingresado
         console.log('Analyzing password:', inputPassword);
@@ -35,8 +58,6 @@ const GeneratedPasswordComponent: React.FC<GeneratedPasswordComponentProps> = ({
 
     return (
         <Paper p="md">
-            <Title order={3} mb="md">Password Management</Title>
-            
             <Tabs value={activeTab} onChange={setActiveTab}>
                 <Tabs.List>
                     <Tabs.Tab value="generated">Generated Password</Tabs.Tab>
@@ -66,48 +87,102 @@ const GeneratedPasswordComponent: React.FC<GeneratedPasswordComponentProps> = ({
                 </Tabs.Panel>
 
                 <Tabs.Panel value="input" pt="md">
-                    <Box>
-                        <Text size="sm" c="dimmed" mb="xs">
-                            Enter a password to analyze:
-                        </Text>
-                        <TextInput
-                            placeholder="Enter password here..."
-                            value={inputPassword}
-                            onChange={handleInputPasswordChange}
-                            mb="md"
-                            styles={{
-                                input: {
-                                    fontFamily: 'monospace',
-                                    fontSize: '14px'
-                                }
-                            }}
-                        />
-                        <Group justify="flex-end">
-                            <Button 
-                                onClick={analyzePassword}
-                                disabled={!inputPassword.trim()}
-                                variant="outline"
-                                size="sm"
-                            >
-                                Analyze Password
-                            </Button>
-                        </Group>
-                        
-                        {inputPassword && (
-                            <Paper 
-                                mt="md"
-                                p="sm"
-                                style={{ 
-                                    backgroundColor: '#f8f9fa',
-                                    border: '1px solid #e9ecef'
-                                }}
-                            >
-                                <Text size="sm" c="dimmed">
-                                    Password preview: <span style={{ fontFamily: 'monospace', fontWeight: 'bold' }}>{inputPassword}</span>
+                    <Grid>
+                        {/* Columna izquierda - Input y controles */}
+                        <Grid.Col span={6}>
+                            <Box>
+                                <Text size="sm" c="dimmed" mb="xs">
+                                    Enter password manually:
                                 </Text>
-                            </Paper>
-                        )}
-                    </Box>
+                                <TextInput
+                                    placeholder="Click symbols or type here..."
+                                    value={inputPassword}
+                                    onChange={handleInputPasswordChange}
+                                    maxLength={20}
+                                    mb="md"
+                                    styles={{
+                                        input: {
+                                            fontFamily: 'monospace',
+                                            fontSize: '14px'
+                                        }
+                                    }}
+                                />
+                                <Text size="xs" c="dimmed" mb="xs" ta="right">
+                                    {inputPassword.length}/20 caracteres
+                                </Text>
+                                <Group justify="space-between" mb="md">
+                                    <Group>
+                                        <Button 
+                                            onClick={clearInputPassword}
+                                            variant="outline"
+                                            size="xs"
+                                            color="red"
+                                        >
+                                            Clear
+                                        </Button>
+                                        <Button 
+                                            onClick={deleteLastCharacter}
+                                            variant="outline"
+                                            size="xs"
+                                            disabled={!inputPassword}
+                                        >
+                                            Delete
+                                        </Button>
+                                    </Group>
+                                    <Button 
+                                        onClick={analyzePassword}
+                                        disabled={!inputPassword.trim()}
+                                        variant="filled"
+                                        size="xs"
+                                    >
+                                        Analyze
+                                    </Button>
+                                </Group>
+                                
+                                {inputPassword && (
+                                    <Paper 
+                                        p="sm"
+                                        style={{ 
+                                            backgroundColor: '#f8f9fa',
+                                            border: '1px solid #e9ecef'
+                                        }}
+                                    >
+                                        <Text size="sm" c="dimmed" mb="xs">
+                                            Password preview (text):
+                                        </Text>
+                                        <Text 
+                                            style={{ 
+                                                fontFamily: 'monospace', 
+                                                fontWeight: 'bold',
+                                                fontSize: '14px',
+                                                marginBottom: '12px'
+                                            }}
+                                        >
+                                            {formatPasswordPreview(inputPassword)}
+                                        </Text>
+                                        
+                                        <Text size="sm" c="dimmed" mb="xs">
+                                            Password preview (symbols):
+                                        </Text>
+                                        <PasswordSymbols 
+                                            password={inputPassword} 
+                                            symbolSize={20}
+                                        />
+                                    </Paper>
+                                )}
+                            </Box>
+                        </Grid.Col>
+
+                        {/* Columna derecha - Teclado especial */}
+                        <Grid.Col span={6}>
+                            <Box>
+                                <Text size="sm" c="dimmed" mb="xs">
+                                    Zelda Oracle Symbol Keyboard:
+                                </Text>
+                                <ZeldaKeyboard onSymbolClick={handleSymbolClick} />
+                            </Box>
+                        </Grid.Col>
+                    </Grid>
                 </Tabs.Panel>
             </Tabs>
         </Paper>
