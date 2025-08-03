@@ -27,6 +27,7 @@ import './App.css';
 
 import { updateProperties } from './zeldaOraclePasswordGenerator';
 import RingsComponent from './RingsComponent';
+import GeneratedPasswordComponent from './GeneratedPasswordComponent';
 
 import nayru from './assets/Nayru.gif';
 import nayru_inactive from './assets/nayru.png';
@@ -575,9 +576,6 @@ const App: React.FC = () => {
         }
     }, [game, gameID, heroName, childName, animal, behavior, isLinkedGame, isHeroQuest]);
 
-    let statePassword = mainPassword;
-    let htmlPassword = formatPassword(statePassword);
-
     let gameIsAges = game === "Ages";
 
     return (
@@ -610,24 +608,10 @@ const App: React.FC = () => {
                 {/* Columna derecha - Resultados */}
                 <Grid.Col span={{ base: 12, lg: 6 }}>
                     <Box style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                        {/* Generated Password */}
-                        <Paper p="md">
-                            <Title order={3} mb="md">Generated Password</Title>
-                            <Paper 
-                                style={{ 
-                                    fontFamily: 'monospace',
-                                    fontSize: '16px',
-                                    fontWeight: 'bold',
-                                    textAlign: 'center',
-                                    padding: '16px',
-                                    backgroundColor: '#f8f9fa',
-                                    border: '1px solid #e9ecef'
-                                }}
-                                dangerouslySetInnerHTML={{
-                                    __html: htmlPassword.length >= 10 ? htmlPassword : "The password will appear here."
-                                }}
-                            />
-                        </Paper>
+                        <GeneratedPasswordComponent 
+                            mainPassword={mainPassword}
+                            formatPassword={formatPassword}
+                        />
 
                         {/* Memory Secrets */}
                         <Paper p="md">
