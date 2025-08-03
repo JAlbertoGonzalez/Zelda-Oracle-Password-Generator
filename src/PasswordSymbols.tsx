@@ -75,7 +75,7 @@ const PasswordSymbols: React.FC<PasswordSymbolsProps> = ({ password, symbolSize 
     // Array de símbolos de Zelda Oracle que corresponde exactamente a los índices de las imágenes
     const zeldaSymbols = [
         'B', 'D', 'F', 'G', 'H', 'J', 'L', 'M', '♠', '♥', '♦', '♣', '#',
-        'N', 'Q', 'R', 'S', 'T', 'W', 'Y', '!', '●', '▲', '■', '+', '-',
+        'N', 'Q', 'R', 'S', 'T', 'W', 'Y', '!', '●', '▲', '■', '–',
         'b', 'd', 'f', 'g', 'h', 'j', 'l', 'm', '$', '*', '/', ':', '~',
         'n', 'q', 'r', 's', 't', 'w', 'y', '?', '%', '&', '(', '=', ')',
         '2', '3', '4', '5', '6', '7', '8', '9', '↑', '↓', '←', '→', '@'
@@ -99,12 +99,26 @@ const PasswordSymbols: React.FC<PasswordSymbolsProps> = ({ password, symbolSize 
         return index !== -1 ? symbolImages[index] : symbolImages[0]; // Si no se encuentra, usar índice 0 por defecto
     };
 
-    // Formatear la contraseña en grupos de 5 caracteres
+    // Formatear la contraseña en 2 líneas de 10 caracteres
     const formatPasswordInGroups = (pwd: string) => {
         const groups = [];
-        for (let i = 0; i < pwd.length; i += 5) {
-            groups.push(pwd.slice(i, i + 5));
+        
+        // Primera línea (caracteres 0-9)
+        if (pwd.length > 0) {
+            const firstLine = pwd.slice(0, 10);
+            if (firstLine.length > 0) {
+                groups.push(firstLine);
+            }
         }
+        
+        // Segunda línea (caracteres 10-19)
+        if (pwd.length > 10) {
+            const secondLine = pwd.slice(10, 20);
+            if (secondLine.length > 0) {
+                groups.push(secondLine);
+            }
+        }
+        
         return groups;
     };
 
@@ -123,8 +137,9 @@ const PasswordSymbols: React.FC<PasswordSymbolsProps> = ({ password, symbolSize 
                 >
                     {group.split('').map((symbol, symbolIndex) => {
                         const symbolImage = getSymbolImage(symbol);
+                        const elements = [];
                         
-                        return (
+                        elements.push(
                             <Image
                                 key={`${groupIndex}-${symbolIndex}`}
                                 src={symbolImage}
@@ -136,7 +151,19 @@ const PasswordSymbols: React.FC<PasswordSymbolsProps> = ({ password, symbolSize 
                                 }}
                             />
                         );
-                    })}
+                        
+                        // Añadir espacio después del 5º símbolo (índice 4)
+                        if (symbolIndex === 4 && group.length > 5) {
+                            elements.push(
+                                <div 
+                                    key={`${groupIndex}-space-${symbolIndex}`}
+                                    style={{ width: '8px' }}
+                                />
+                            );
+                        }
+                        
+                        return elements;
+                    }).flat()}
                 </Box>
             ))}
         </Box>

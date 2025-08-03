@@ -1,4 +1,4 @@
-import { Button, Paper, SimpleGrid, Image } from '@mantine/core';
+import { Button, Paper, Image } from '@mantine/core';
 
 // Importar todas las imágenes de símbolos
 import symbol00 from './assets/Symbols_US/00.png';
@@ -67,20 +67,20 @@ import symbol62 from './assets/Symbols_US/62.png';
 import symbol63 from './assets/Symbols_US/63.png';
 
 interface ZeldaKeyboardProps {
-    onSymbolClick: (symbol: string) => void;
+    onSymbolClick?: (symbol: string) => void;
 }
 
 const ZeldaKeyboard: React.FC<ZeldaKeyboardProps> = ({ onSymbolClick }) => {
-    // Símbolos del teclado especial de Zelda Oracle organizados en 13x5 (65 símbolos)
+    // Array de símbolos de Zelda Oracle que corresponde exactamente a los índices de las imágenes
     const zeldaSymbols = [
         'B', 'D', 'F', 'G', 'H', 'J', 'L', 'M', '♠', '♥', '♦', '♣', '#',
-        'N', 'Q', 'R', 'S', 'T', 'W', 'Y', '!', '●', '▲', '■', '+', '-',
+        'N', 'Q', 'R', 'S', 'T', 'W', 'Y', '!', '●', '▲', '■', '–',
         'b', 'd', 'f', 'g', 'h', 'j', 'l', 'm', '$', '*', '/', ':', '~',
         'n', 'q', 'r', 's', 't', 'w', 'y', '?', '%', '&', '(', '=', ')',
         '2', '3', '4', '5', '6', '7', '8', '9', '↑', '↓', '←', '→', '@'
     ];
 
-    // Array de imágenes importadas
+    // Array de todas las imágenes importadas (64 imágenes: 00.png a 63.png)
     const symbolImages = [
         symbol00, symbol01, symbol02, symbol03, symbol04, symbol05, symbol06, symbol07,
         symbol08, symbol09, symbol10, symbol11, symbol12, symbol13, symbol14, symbol15,
@@ -92,55 +92,117 @@ const ZeldaKeyboard: React.FC<ZeldaKeyboardProps> = ({ onSymbolClick }) => {
         symbol56, symbol57, symbol58, symbol59, symbol60, symbol61, symbol62, symbol63
     ];
 
-    // Función para obtener la imagen basada en el índice
-    const getSymbolImage = (index: number): string => {
-        return symbolImages[index] || symbolImages[0];
-    };
-
     return (
         <Paper 
-            p="sm" 
+            p="xs" 
             style={{ 
                 backgroundColor: '#f8f9fa',
                 border: '1px solid #e9ecef',
-                maxHeight: '300px',
-                overflowY: 'auto'
+                width: '100%',
+                overflow: 'hidden'
             }}
         >
-            <SimpleGrid 
-                cols={13} 
-                spacing="xs"
-                style={{ gap: '2px' }}
+            <div
+                style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(8, 20px) 8px repeat(5, 20px)',
+                    gridTemplateRows: 'repeat(5, 22px)',
+                    gap: '1px',
+                    width: 'fit-content',
+                    maxWidth: '100%'
+                }}
             >
-                {zeldaSymbols.map((symbol, index) => (
-                    <Button
-                        key={index}
-                        variant="outline"
-                        size="xs"
-                        style={{
-                            minWidth: '28px',
-                            height: '28px',
-                            padding: '2px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center'
-                        }}
-                        onClick={() => onSymbolClick(symbol)}
-                    >
-                        <Image
-                            src={getSymbolImage(index)}
-                            alt={symbol}
-                            style={{
-                                width: '20px',
-                                height: '20px',
-                                objectFit: 'contain'
-                            }}
-                        />
-                    </Button>
-                ))}
-            </SimpleGrid>
+                {/* Renderizar todos los botones en orden secuencial con separación después del 8º botón de cada fila */}
+                {Array.from({ length: 65 }, (_, index) => {
+                    const col = index % 13;
+                    
+                    // Añadir espacio vacío después del 8º botón (columna 7, índice base 0) de cada fila
+                    const shouldAddSpace = col === 7;
+                    
+                    const elements = [];
+                    
+                    // El botón de espacio está en la posición 32 (después de 'j', antes de 'l')
+                    if (index === 32) {
+                        elements.push(
+                            <Button
+                                key="space"
+                                variant="outline"
+                                size="xs"
+                                style={{
+                                    width: '20px',
+                                    height: '22px',
+                                    padding: '0px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    backgroundColor: '#e9ecef',
+                                    opacity: 0.5,
+                                    border: '1px solid #ced4da',
+                                    borderRadius: '1px',
+                                    fontSize: '6px'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.borderBottom = '2px solid #007bff';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.borderBottom = '1px solid #ced4da';
+                                }}
+                                onClick={() => onSymbolClick && onSymbolClick(' ')}
+                            >
+                                {/* Botón vacío para espacio */}
+                            </Button>
+                        );
+                    } else {
+                        // Ajustar el índice para los símbolos después del espacio
+                        const symbolIndex = index > 32 ? index - 1 : index;
+                        const imageSource = symbolImages[symbolIndex];
+                        
+                        elements.push(
+                            <Button
+                                key={symbolIndex}
+                                variant="outline"
+                                size="xs"
+                                style={{
+                                    width: '20px',
+                                    height: '22px',
+                                    padding: '0px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    border: '1px solid #ced4da',
+                                    borderRadius: '1px',
+                                    fontSize: '6px'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.borderBottom = '2px solid #007bff';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.borderBottom = '1px solid #ced4da';
+                                }}
+                                onClick={() => onSymbolClick && onSymbolClick(`${zeldaSymbols[symbolIndex]}`)}
+                            >
+                                <Image
+                                    src={imageSource}
+                                    alt={`Symbol ${symbolIndex}`}
+                                    style={{
+                                        width: '16px',
+                                        height: '16px',
+                                        objectFit: 'contain'
+                                    }}
+                                />
+                            </Button>
+                        );
+                    }
+                    
+                    // Añadir espacio vacío después del 8º botón de cada fila
+                    if (shouldAddSpace) {
+                        elements.push(<div key={`spacer-${index}`} style={{ width: '8px' }} />);
+                    }
+                    
+                    return elements;
+                }).flat()}
+            </div>
         </Paper>
     );
 };
-
 export default ZeldaKeyboard;

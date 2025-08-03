@@ -43,12 +43,35 @@ const GeneratedPasswordComponent: React.FC<GeneratedPasswordComponentProps> = ({
     };
 
     const formatPasswordPreview = (password: string): string => {
-        // Convertir la contraseña en 4 grupos de 5 caracteres
-        const groups = [];
-        for (let i = 0; i < password.length; i += 5) {
-            groups.push(password.slice(i, i + 5));
+        // Convertir la contraseña en 2 líneas de 10 caracteres con espacios cada 5
+        if (password.length === 0) return '';
+        
+        let formatted = '';
+        
+        // Primera línea (caracteres 0-9)
+        const firstLine = password.slice(0, 10);
+        if (firstLine.length > 0) {
+            // Añadir espacio después del 5º caracter
+            if (firstLine.length > 5) {
+                formatted += firstLine.slice(0, 5) + ' ' + firstLine.slice(5);
+            } else {
+                formatted += firstLine;
+            }
         }
-        return groups.join(' ');
+        
+        // Segunda línea (caracteres 10-19)
+        const secondLine = password.slice(10, 20);
+        if (secondLine.length > 0) {
+            formatted += '\n'; // Salto de línea
+            // Añadir espacio después del 15º caracter (5º de la segunda línea)
+            if (secondLine.length > 5) {
+                formatted += secondLine.slice(0, 5) + ' ' + secondLine.slice(5);
+            } else {
+                formatted += secondLine;
+            }
+        }
+        
+        return formatted;
     };
 
     const analyzePassword = () => {
@@ -155,7 +178,9 @@ const GeneratedPasswordComponent: React.FC<GeneratedPasswordComponentProps> = ({
                                                 fontFamily: 'monospace', 
                                                 fontWeight: 'bold',
                                                 fontSize: '14px',
-                                                marginBottom: '12px'
+                                                marginBottom: '12px',
+                                                whiteSpace: 'pre-line',
+                                                textAlign: 'center'
                                             }}
                                         >
                                             {formatPasswordPreview(inputPassword)}
